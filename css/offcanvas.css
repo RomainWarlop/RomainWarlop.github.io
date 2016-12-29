@@ -1,0 +1,101 @@
+.noBorderTable
+{
+  width: 100%;
+}
+
+
+/*
+ * Style tweaks
+ * --------------------------------------------------
+ */
+html,
+body {
+  overflow-x: hidden; /* Prevent scroll on narrow devices */
+}
+body {
+  padding-bottom: 40px;
+}
+footer {
+  padding: 30px 0;
+}
+
+/* Navbar positioning foo */
+.navbar-wrapper {
+margin-top: 20px;
+}
+.navbar-wrapper .container {
+padding-right: 15px;
+padding-left:  15px;
+}
+.navbar-wrapper .navbar {
+padding-right: 0;
+padding-left:  0;
+}
+
+/* The navbar becomes detached from the top, so we round the corners */
+.navbar-wrapper .navbar {
+border-radius: 4px;
+}
+
+
+/*
+ * Off Canvas
+ * --------------------------------------------------
+ */
+@media screen and (max-width: 767px) {
+  .row-offcanvas {
+    position: relative;
+    -webkit-transition: all .25s ease-out;
+       -moz-transition: all .25s ease-out;
+            transition: all .25s ease-out;
+  }
+
+  .row-offcanvas-right {
+    right: 0;
+  }
+
+  .row-offcanvas-left {
+    left: 0;
+  }
+
+  .row-offcanvas-right
+  .sidebar-offcanvas {
+    right: -50%; /* 6 columns */
+  }
+
+  .row-offcanvas-left
+  .sidebar-offcanvas {
+    left: -50%; /* 6 columns */
+  }
+
+  .row-offcanvas-right.active {
+    right: 50%; /* 6 columns */
+  }
+
+  .row-offcanvas-left.active {
+    left: 50%; /* 6 columns */
+  }
+
+  .sidebar-offcanvas {
+    position: absolute;
+    top: 0;
+    width: 50%; /* 6 columns */
+  }
+}
+
+
+/* My css */
+.jumbotron img, .jumbotron span
+{
+	display:inline-block;
+	vertical-align:top;
+}
+
+.jumbotron span p
+{
+	font-size:small;
+	margin-left:20px;
+}
+
+
+

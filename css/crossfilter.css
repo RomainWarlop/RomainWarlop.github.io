@@ -1,0 +1,47 @@
+.axis path,
+.axis line {
+fill: none;
+stroke: #000;
+shape-rendering: crispEdges;
+}
+
+.x.axis path {
+display: none;
+}
+
+.line {
+fill: none;
+stroke: steelblue;
+stroke-width: 1.5px;
+}
+
+#chart-budgetrep, #chart-boxofficerep, #chart-profitabilityrep, #chart-budgetpermin
+{
+	width:400px;
+}
+
+#chart-rank1, #chart-ratio
+{
+	width:300px;
+}
+
+#chart-ring-year
+{
+	width:200px;
+}
+
+#chart-win_rank, #chart-surface
+{
+	width:180px;
+}
+
+#chart-ring-year svg, #chart-win_rank svg, #chart-surface svg
+{
+	margin-top:20px;
+}
+
+#chart-boxoffice_genres
+{
+	width:900px;
+	float:none;
+}
