@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/assets/ico/favicon.ico">
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="/js/d3.parcoords_per.js"></script>
+	<script src="/js/underscore.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/d3.parcoords.css">
+	<link rel="stylesheet" type="text/css" href="/css/bubbleChart.css">
+	
+    <title>Romain WARLOP</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	<!-- Custom styles for this template -->
+    <link href="/css/dashboard.css" rel="stylesheet">
+	<link href="/css/crossfilter.css" rel="stylesheet">
+	<link href="/dc.js-1.7.0/dc.css" rel="stylesheet">
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+<body>
+
+<?php include($_SERVER['DOCUMENT_ROOT'].'/navbar.php'); ?>
+
+<div class="container-fluid">
+  <div class="row">
+	
+	<div class="col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 main">
+	  <!--<h1 class="page-header">Premier League Champion</h1>-->
+	  <ul class="nav nav-tabs">
+		  <li class="active"><a href="#" style="font-weight:bold;">Precision and recall</a></li>
+		  <li class="dropdown">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+			  Dropdown <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+			  <li><a href="#introduction"><strong>Introduction and notation</strong></a></li>
+			  <li><a href="#illustration"><strong>Illustration</strong></a></li>
+			</ul>
+			<li class="lastupdate">Last Update - 2015/03/06</li>
+		  </li>
+		</ul>
+	</br>
+	
+	
+	<div class="row">
+	<h2 id="introduction" class="sub-header">Introduction and notation </h2>
+	The precision and the recall are the indicators used to measure the performance of binary classification model, for instance is the patient sick or not ? 
+	Usually the output is noted 1 or 0. </br>
+	Let's imagine we have a population of 1 and 0. We want then create from observed data a model able to predict if someone is a 1 or a 0. The model output 
+	have 4 possibilities:
+	<ul>
+		<li>It predict 1 and it's really a 1. The prediction is a <strong>True Positive (TP)</strong></li>
+		<li>It predict 1 and it was supposed to be 0. The prediction is a <strong>False Positive (FP)</strong></li>
+		<li>It predict 0 and it's really a 0. The prediction is a <strong>True Negative (TN)</strong></li>
+		<li>It predict 0 and it was supposed to be a 1. The prediction is a <strong>False Negative (FN)</strong></li>
+	</ul>
+	Usually it is summarise in a table as follow:
+	<div style="width:350px;center:centered;margin-left: 100px;">
+	<table class="table table-bordered" style="text-align:center;">
+	<tr><th rowspan="2" colspan="2"><center>#</center></th><th colspan="2"><center>Prediction</center></th></tr>
+	<tr><th><center>1</center></th><th><center>0</center></th></tr>
+	<tr><th rowspan="2"><center>Reality</center><th><center>1</center></th><td id="TP">TP = ?</td><td id="FN">FN = ?</td></tr>
+	<tr><th><center>0</center></th><td id="FP">FP = ?</td><td id="TN">TN = ?</td></tr>
+	</table>
+	</div>
+	
+	Furthermore, let's note <strong>P</strong> (resp. <strong>N</strong>) the total a 1 (resp. 0) in the original dataset, P&#770; the total of predicted 1 (resp. 0). 
+	So P = TP+FN and N = FP+FN.
+	</br>
+	The precision is the number of true positive divided by the number of predicted 1 : precision = TP/P&#770;. Thus the precision is, amoung all the time I said it's a 1, 
+	how many times I was right. So P&#770; = TP+FP and likewise (to complete the table) N&#770; = FN+TN.</br>
+	The recall is the number of true positive divided by the number of 1 in the original dataset : precision = TP/P. Thus the recall is, amoung, all the time it was supposed 
+	to be a 1, how many time I found it.</br>
+	The <strong>concentration</strong> of 1 is P/(P+N)</br>
+	
+	<h3>Is it better to have a high precision or a high recall? Many false positive or many false negative ?</h3>
+	It depends on the objective. If the objective is to give a particular treatment to the people being 1, and if I give the treatment to the wrong person this person will risk to die or have serious damage, 
+	you'd better have a low recall (miss most of 1) but have a high precision (rarely give false positive). But if you have to put in quarantine every person being a 1 for a month or a 
+	mortal disease will spread all over the world, you'd better have a high recall (found everybody) but have a low precision (put some people in quarantine that are not supposed to be,
+	it's ok they will go out in one month !)
+	
+	
+	The performance of the model has to be compared to the concentration. Indeed, if the concentration is 0.1%, a precision of 50% is fabulous. But if 
+	the concentration is 48%, a precision of 50% is not so good.
+	
+	<h2 id="illustration" class="sub-header">Illustration</h2>
+	<span id="dataset" style="vertical-align:top"></span>
+	<span style="vertical-align:top;position:relative;top:100px;width:450px;display:inline-block;"> 
+	Let's consider the aside dataset. 25% of the population is a 1. So now we have to train a model that will give us how likely an entry has to be a 1.
+	</span>
+	</br>
+	</br>
+	The model gives for output a score between 0 and 1. By placing a threshold at different levels between 0 and 1, we can modify the precision and the recall in order 
+	to be more or less conservative.
+	</br>
+	</br>
+	<span id="prediction" style="vertical-align:top"></span>
+	<span style="vertical-align:top;display:inline-block;width:450px;">By lowering the threshold, the orange area increase since we accept more and more people to be at 1.
+	Thus the recall increase since we find more 1, but the precision decrease because we have more false positive.
+	</br> The better the model, the smaller the precision decrease while the recall increase. Visually, it means than when we decrease the threshold, the orange area above the blue area increase less 
+	than above the green area.
+	</br> By putting the threshold at 0, the orange area is the whole space, then the recall is 100% and the precision is equal to the concentration.
+	</br> By putting the threshold at 1, the orange area is of size 1 (only 1 point), if this point is a true positive the recall is 1/P and the precision is 100%, if 
+	this point is a false positive the recall is 0% and the precision 0%.
+	</span>
+	</br>
+	</br>
+	Let's fix a threshold and visualize the precision and the recall.
+	</br>
+	</br>
+	<span id="precisionRecall" style="vertical-align:top"></span>
+	<span style="vertical-align:top;display:inline-block;width:450px;">
+	The precision is the red area over the total orange area (visible on last graph). </br> 
+	The recall is the red area over the green area (visible on the first graph).
+	</span>
+	</br>
+	</br>
+	We can then plot a precision recall curve where each point is the value of the precision and the recall for a specific threshold.
+	</br>
+	<span id="PRCurve" style="vertical-align:top"></span>
+	<span style="vertical-align:top;display:inline-block;width:400px;top:50px;position:relative;">
+	Let's now consider a random choice. We have n papers in a bag written 1 or 0. We take at random m papers and our prediction is that they are all ones. In average, 
+	the precision will be the concentration, since the probability you pick a 1 is equal to the concentration. For instance, the oxygen concentration in the 
+	air is around 20%, if you fill a balloon with ambient air, the concentration of oxygen in the balloon will still be 20%. What's change is the recall, if 
+	you take a small sample of n, you will get little good 1. If you pick half the bag (playing head or tails) you will pick half of 1, so get a recall of 50%,
+	if you pick the entire bag, the recall is 100%. Eventually, the precision-recall curve of the random strategy will be the blue horizontal line equal to the 
+	concentration on last plot.</br>
+	</br>
+	We see that given the quite low concentration, a model that would have such a red curve would be an excellent model. For some model, the precision can start 
+	from 0%, then quickly go above the concentration line and decrease to met the concentration line for a recall of 100%.
+	</span>
+	
+	</div>
+	
+	</div>
+	
+          
+	</div>
+</div>
+</body>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script>sidebarAactiveli("/machinelearning/entertainment/tennis.php");</script>
+	<script src="/js/crossfilter.v1.min.js"></script>
+	<script src="/dc.js-1.7.0/dc.js"></script>
+	<script src="/js/function.js"></script>
+	<script src="/library/kinetic.js"></script>
+	<script src="/js/precisionrecall.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/js/docs.min.js"></script></body>
+</html>

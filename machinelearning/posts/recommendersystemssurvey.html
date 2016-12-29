@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/assets/ico/favicon.ico">
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="/js/d3.parcoords_per.js"></script>
+	<script src="/js/underscore.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/d3.parcoords.css">
+	<link rel="stylesheet" type="text/css" href="/css/bubbleChart.css">
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+	});
+	</script>
+	<script src="/MathJax-master/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<link rel="stylesheet" type="text/css" href="/css/d3.parcoords.css">
+	<link rel="stylesheet" type="text/css" href="/css/bubbleChart.css">
+    <title>Romain WARLOP</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	<!-- Custom styles for this template -->
+    <link href="/css/dashboard.css" rel="stylesheet">
+	<link href="/css/crossfilter.css" rel="stylesheet">
+	<link href="/dc.js-1.7.0/dc.css" rel="stylesheet">
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+<body>
+
+<?php include($_SERVER['DOCUMENT_ROOT'].'/navbar.php'); ?>
+
+<div class="container-fluid">
+  <div class="row">
+	
+	<div class="col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 main">
+	  <!--<h1 class="page-header">Premier League Champion</h1>-->
+	  <ul class="nav nav-tabs">
+		  <li class="active"><a href="#" style="font-weight:bold;">Recommender Systems Survey</a></li>
+		  <li class="dropdown">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+			  Dropdown <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+			  <li><a href="#algolist"><strong>List of reviewed algorithms</strong></a></li>
+			  <li><a href="#details"><strong>Presentation of the algorithms</strong></a></li>
+			  <li><a href="#experiments"><strong>Experiments</strong></a></li>
+			</ul>
+			<li class="lastupdate">Last Update - 2016/03/26</li>
+		  </li>
+		</ul>
+	</br>
+	
+	<div class="panel panel-info">
+	<div class="panel-heading">
+		<h3 class="panel-title">Abstract</h3>
+	</div>
+	<div class="panel-body">
+	There are a LOT of algorithms for recommender systems. In this post, I will try to list a part of them (and hopefully a large part). I will not introduce what are 
+	recommender system, what they are for, etc ... I have a <a href="http://rwarloplabs.com/machinelearning/posts/recommendersystem.php" target=_blank>post</a> that 
+	introduce the concept a little, but the goal here is to go straight to the point. Thus I will present each algorithm in few lines in order to just to have the big 
+	picture of each algorithm is solving and what they model. In a second part of this post, I'll try to compared them on different
+	datasets and give the code on my <a href="https://github.com/RomainWarlop/RecSys-Library" target=_blank>github</a>, but this will be a very painful work ! 
+	I'll try to have a dozen of algorithm codes before moving to experiments parts.
+	</br>
+	There are : 
+	<ul> 
+		<li> 11 algorithms named so far</li>
+		<li> 5 algorithms detailed so far </li>
+		<li> 0 algorithms tested experimentaly so far </li>
+		<li> 5 codes available </li>
+	</ul>
+	</div>
+	</div>
+	
+	
+	<div class="row">
+		<center><h1 id="details" class="header">Presentation of the algorithms</h1></center>
+
+	<div id="contextMF" class="row">
+	<strong>Contextual Matrix Factorization</a></strong>
+	 - [<a href="javascript:display('contextMF')" class="display">Display</a>] - 
+	</br>
+	<span id="contextMFblock" style="display:None"></br>
+	Most of the time matrix factorization for recommencer system is apply on the user x item feedback sparse matrix thus without any contextual knowledge on the user or the item.
+	This is often sufficient because the implicit description obtained from the rating of a user is less bias than an explicit description like age, gender, ... . But when a 
+	user is new to the system (cold start problem), the implicit description won't be enough to make proper recommendation. 
+	Some hybrid methods are then derived by computing a weighted average between a collaborative filtering (CF) algorithm (rely only on the feedback) and 
+	acontent-based methods (rely on the context). But those methods are not really satisfactory since it need to manualy tune to weight of the average. 
+	</br>
+	A better way to do so is to add extra column and extra row to the CF matrix and filling them with the context. For instance, let R be the sparse CF matrix scaled 
+	between 0 and 1 (that is if we add before 1 to 5 stars for a rating it is now 0.2 to 1), where each line 
+	is a user and each column a movie. For each user we know if it's a male or a female, and it's age. Let's dummify everithing : so we add a first column that worth 1 if the 
+	user is a male, 0 otherwise, a second column for female, a third if the user have less than 10 years old, a fourth between 10 and 20 years old, etc ... Likewise we add a 
+	first row if the movie is an action movie, a second row for thriller, ... a nth for the actor being 'some actor' ... We end up with a bigger matrix that look like this : 
+	<center>
+	<img src="/images/contextMF.png" with="400px">
+	</center>
+	We can then apply any matrix factorization techniques we want, like ALS-WR, RSVD, etc that we will see just below. The nice things is that the weight between context and 
+	ratings in the feature description will be automatic : if the user have only 2 ratings, and we have 10 context informations, most of the weight will be in the context; if 
+	the user have 50 ratings, the weight will be in the ratings. Finally, when filling the empty matrix by learning, we obtained context x context taste like what kind of movie 
+	young people prefer, which can be an interesting insight. In the experiments section I will learn the model 
+	in pure CF and with context and will refer to this model by "context_method" like "context_ALSWR".
+	</br>
+	Of course there are other techniques like Factorization Machines that we will see below too, but I think it is interesting to compare Factorization Machines with 
+	contextual matrix factorization instead of with pure collaborative filtering for fairness issues !  
+	</span>
+	</div>
+
+	</br>
+
+	<div id="ALSWR" class="row">
+	<strong><a href="http://www.grappa.univ-lille3.fr/~mary/cours/stats/centrale/reco/paper/MatrixFactorizationALS.pdf" target=_blank>ALS-WR : Alternating-Least-Squares with Weighted-λ-Regularization</a></strong>
+	 - [<a href="javascript:display('ALSWR')" class="display">Display</a>] - 
+	[<a href="https://github.com/RomainWarlop/RecSys-Library/tree/master/recsyslib/ALSWR" target=_blank>Source</a>]
+	</br>
+	<span id="ALSWRblock" style="display:None"></br>
+	<ul>
+		<li>$R \in \mathbb{R}^{ n \times p} = (r_{ij})$ denote the sparse user-item matrix.</li>
+		<li>$\mathcal{D}$ is the set of available ratings.</li>
+		<li>Assume a low rank constraint $K$ on the matrix : $R = UV^T$, $U,V \in \mathbb{R}^{ n \times K}, \mathbb{R}^{ p \times K}$</li>
+		<li>$U_i$ and $V_j$ denotes respectively the latent features of user $i$ and item $j$.</li>
+		<li>$n^{\mathcal{U}}_i$ is the number of ratings provided by user $i$.</li>
+		<li>$n^{\mathcal{I}}_j$ is the number of ratings available for item $j$.</li>
+		<li>$\mathcal{I}_i$ and $L\mathcal{U}_j$ is respectively the set of rated item by user $i$ and available ratings for item $j$.</li>
+		<li>$\hat{r}_{ij} = U_iV_j^T$
+	</ul>
+	Objective function :
+	$$f(U,V) = \sum_{i,j \in \mathcal{D}} (r_{ij}-U_iV_j^T)^2 + \lambda 
+		\left(\sum_{i} n^{\mathcal{U}}_i ||U_i||^2 + \sum_{j} n^{\mathcal{I}}_j ||V_j||^2 \right)$$
+
+	<center>
+	<strong>Algorithm</strong>
+	<img src="/images/algoALS.png" with="400px">
+	</center>
+	</span>
+	</div>
+	
+	</br>
+
+	<div id="RSVD" class="row">
+	<strong><a href="https://www.cs.uic.edu/~liub/KDD-cup-2007/proceedings/Regular-Paterek.pdf" target=_blank>RSVD: Regularized SVD</a></strong>
+	 - [<a href="javascript:display('RSVD')" class="display">Display</a>] - 
+	[<a href="https://github.com/RomainWarlop/RecSys-Library/tree/master/recsyslib/RSVD" target=_blank>Source</a>]
+	</br>
+	<span id="RSVDblock" style="display:None"></br>
+	<ul>
+		<li>Very close to ALS-WR but little change on the regularization and learning is done by stochastic gradient descent</li>
+		<li>$\hat{r}_{ij} = U_iV_j^T$</li>
+		<li>$lrate$ is the learning rate of the SGD</li>
+	</ul>
+	Objective function :
+	$$f(U,V) = \sum_{i,j \in \mathcal{D}} (r_{ij}-U_iV_j^T)^2 + \lambda 
+		\left(\sum_{i} ||U_i||^2 + \sum_{j} ||V_j||^2 \right)$$
+
+	<center>
+	<strong>Algorithm</strong>
+	<img src="/images/algoRSVD.png" with="400px">
+	</center>
+	</span>
+	</div>
+
+	</br>
+
+	<div id="impRSVD" class="row">
+	<strong><a href="https://www.cs.uic.edu/~liub/KDD-cup-2007/proceedings/Regular-Paterek.pdf" target=_blank>imp RSVD: Improved Regularized SVD</a></strong>
+	 - [<a href="javascript:display('impRSVD')" class="display">Display</a>] - 
+	[<a href="https://github.com/RomainWarlop/RecSys-Library/tree/master/recsyslib/RSVD" target=_blank>Source</a>]
+	</br>
+	<span id="impRSVDblock" style="display:None"></br>
+	<ul>
+		<li>Add a user bias $c_i$ and an item bias $d_j$</li>
+		<li>$\hat{r}_{ij} = c_i + d_j + U_iV_j^T$</li>
+		<li>$lrate$ is the learning rate of the SGD</li>
+	</ul>
+	Objective function :
+	$$f(C,D,U,V) = \sum_{i,j \in \mathcal{D}} (r_{ij}-U_iV_j^T-c_i-d_j)^2 + \lambda 
+		\left(\sum_{i} ||U_i||^2 + \sum_{j} ||V_j||^2 \right) + \lambda_2 
+		\left(\sum_{i} c_i^2 + \sum_{j} ||d_j||^2\right)$$
+
+	<center>
+	<strong>Algorithm</strong>
+	<img src="/images/algoimpRSVD.png" with="400px">
+	</center>
+	</span>
+	</div>
+
+	</br>
+	
+	<div id="FM" class="row">
+	<strong><a href="http://www.csie.ntu.edu.tw/~b97053/paper/Rendle2010FM.pdf" target=_blank>FM : Factorization Machines</a></strong>
+	 - [<a href="javascript:display('FM')" class="display">Display</a>] - 
+	[<a href="https://github.com/RomainWarlop/RecSys-Library/tree/master/recsyslib/pyFM" target=_blank>Source</a>]
+	</br>
+	<span id="FMblock" style="display:None"></br>
+	</br>
+	<ul> 
+		<li>Training set $S = \{(x^{(1)},y^{(1)}),(x^{(2)},y^{(2)}),\cdots \}$</li>
+		<li>$x^{(i)} \in \mathbb{R}^n$ is a sparse vector represent all the context (user, item, time, ...). For instance 
+			the $m$ first values is a dummy variable indicating which user is it, the next $p$ is a dummy variable for the 
+			item, then the month, the moment of the day, the last seen item, ... </li>
+		<li>$y^{(i)}$ is the rating</li>
+		<li><em>Model equation of a machine of degree 2</em>: $\hat{y}(x) = w_0 + \sum_{i=1}^n w_i x_i + \sum_{i=1}^n \sum_{j=i+1}^n < v_i, v_j > x_i x_j$</li>
+		<li>$w_0 \in \mathbb{R}$, $w \in \mathbb{R}^n$, $V \in \mathbb{R}^{n \times k}$</li>
+		<li>$< v_i, v_j > = \sum_{f=1}^k v_{i,f} v_{j,f}$</li>
+		<li>With the right input, FM can mimic several other alogrithms (Matrix Factorization, SVD++, ...)</li>
+		<li>$\Theta = {w_0, w, V}$</li>
+	</ul>
+	Objective function :
+	$$\sum_{i \in \mathcal{D}} (\hat{y}(x_i)-y_i)^2 + \sum_{\lambda_{(\theta)} \in \Theta} 
+		\left(\lambda_{\theta} \theta^2 \right)$$
+
+	<center>
+	<strong>Algorithm</strong>
+	<img src="/images/algoFM.png" with="400px">
+	</center>
+	</span>
+	</div>
+
+	</br>
+
+	<div id="RBM" class="row">
+	<strong><a href="http://www.machinelearning.org/proceedings/icml2007/papers/407.pdf" target=_blank>RBM for CF : Restricted Boltzmann Machine for Collaborative Filtering</a></strong>
+	 - [<a href="javascript:display('RBM')" class="display">Display</a>] - 
+	[<a href="https://github.com/RomainWarlop/RecSys-Library/tree/master/recsyslib/RBMCF" target=_blank>Source</a>]
+	</br>
+	<span id="RBMblock" style="display:None"></br>
+		<ul> 
+			<li>It's a <a href="https://www.cs.toronto.edu/~hinton/absps/guideTR.pdf" target=_blank>RBM</a> !, but ... </li>
+			<li>We learn a RBM per user </li>
+			<li>All weights and biases are tied accross all users by averaging the gradient over all users </li>
+			<li>For a partular RBM, so a particular, there is only has many visible units as the user had rated items, but always the same number of hidden units </li>
+			<li>Each RBM have only a single training example. It is the vector of ratings amoung previously rated items</li>
+			<li>Each visible unit is a softmax unit of size K if an item can be rated between 1 and K.</li>
+			<li>The visible unit is a matrix $V \in \mathbb{R}^{m \times K}$ where $m$ is the number of item rated by the user, and $V_{i,k}=1$ is the user give a rate  
+				of $k$ to movie $i$ and $0$ otherwise.</li>
+		</ul>
+
+
+	<center>
+	<strong>Algorithm</strong>
+	<img src="/images/algoRBM.png" with="400px">
+	</center>
+
+	<strong>Make a prediction</strong>
+	We have for a given user $u$ and his corresponding matrix $V$:
+	$$p(v_{q,k}=1|V) \propto \Gamma_q^k \prod_{j=1}^F \left( 1+\exp(\sum_{il}v_{i,l} W_{l,i,j} + v_{q,k} W_{k,q,j} + {V_b}_j) \right)$$
+	We then output the value by taking the weighted average :
+	$$R_{u,q} = \frac{\sum_k k p(v_{q,k}=1|V)}{\sum_k p(v_{q,k}=1|V)}$$
+	</span>
+	</div>
+
+	</br>
+
+	<div id="SVDpp" class="row">
+	<strong><a href="http://www.cs.rochester.edu/twiki/pub/Main/HarpSeminar/Factorization_Meets_the_Neighborhood-_a_Multifaceted_Collaborative_Filtering_Model.pdf" target=_blank>SVD++</a></strong>
+	 - [<a href="javascript:display('SVDpp')" class="display">Display</a>] - 
+	[TBD]
+	</br>
+	<span id="SVDppblock" style="display:None"></br>
+		<ul>
+		<li>Very close to impRSVD but with an extra term introducing "implicit" feedback that are previously rated movie by the user (regardless the rating) </li>
+		<li>$\mu$ global bias</li>
+		<li>$y_j$ extra set of item factors characterizing users based on the set of items they rated</li>
+		<li>$R(u)$ contains the items rated by user u</li>
+		<li>$\hat{r}_{ij} = \mu+c_i+d_j+V_j^T(U_i+|R(i)|^{-1/2} \sum_{p \in R(i)} y_p)$
+	</ul>
+	Objective function :
+	$$f\sum_{i,j \in \mathcal{D}} (r_{ij}-\hat{r}_{ij})^2 + \lambda \left(||U_i||^2 + ||V_j||^2 + c_i^2 + d_j^2 \right)$$
+
+	<center>
+	<strong>Algorithm</strong>
+	<img src="/images/algoSVDpp.png" with="400px">
+	</center>
+	</span>
+	</div>
+
+	</br>
+
+	<div id="TimeSVDpp" class="row">
+	<strong><a href="http://www.cc.gatech.edu/~zha/CSE8801/CF/kdd-fp074-koren.pdf" target=_blank>TimeSVD++</a></strong>
+	 - [<a href="javascript:display('TimeSVDpp')" class="display">Display</a>] - 
+	[TBD]
+	</br>
+	<span id="TimeSVDppblock" style="display:None"></br>
+		To de done
+	</span>
+	</div>
+
+	</br>
+
+	<div id="APG" class="row">
+	<strong><a href="http://www.csie.ntu.edu.tw/~b97053/paper/Rendle2010FM.pdf" target=_blank>APG : Accelerated Proximal Gradient singular value thresholding</a></strong>
+	 - [<a href="javascript:display('APG')" class="display">Display</a>] - 
+	[TBD]
+	</br>
+	<span id="APGblock" style="display:None"></br>
+		To de done
+	</span>
+	</div>
+
+	</br>
+
+	<div id="GSMF" class="row">
+	<strong><a href="http://www.aaai.org/ocs/index.php/AAAI/AAAI14/paper/download/8267/8424" target=_blank>GSMF : Group-Sparse Matrix Factorization</a></strong>
+	 - [<a href="javascript:display('GSMF')" class="display">Display</a>] - 
+	[TBD]
+	</br>
+	<span id="GSMFblock" style="display:None"></br>
+		To de done
+	</span>
+	</div>
+
+	</br>
+
+	<div id="DFC" class="row">
+	<strong><a href="http://web.cs.ucla.edu/~ameet/dfc.pdf" target=_blank>DFC : Divide-Factor-Combine</a></strong>
+	 - [<a href="javascript:display('DFC')" class="display">Display</a>] - 
+	[TBD]
+	</br>
+	<span id="DFCblock" style="display:None"></br>
+		To de done
+	</span>
+	</div>
+	</br>
+
+	<div id="LLORMA" class="row">
+	<strong><a href="http://jmlr.org/proceedings/papers/v28/lee13.pdf" target=_blank>LLORMA : Local Low-Rank Matrix Approximation</a></strong>
+	 - [<a href="javascript:display('LLORMA')" class="display">Display</a>] - 
+	[TBD]
+	</br>
+	<span id="LLORMAblock" style="display:None"></br>
+		To de done
+	</span>
+	</div>
+
+	</div>
+
+	<div class="row">
+		<center><h1 id="experiments" class="header">Experiments</h1></center>
+	</div>
+
+
+	
+	
+
+	
+
+</div>
+</body>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script>
+    function display(blockID) {
+    	var block = document.getElementById(blockID+'block');
+    	var b = document.getElementById(blockID);
+    	if (block.style.display=='block') {
+    		block.style.display='None';
+    		b.getElementsByClassName('display')[0].innerText='Display'
+    	} else {
+    		block.style.display = 'block';
+    		b.getElementsByClassName('display')[0].innerText = 'Hide'
+    	}
+
+    	
+
+    }
+    </script>
+	<script src="/js/crossfilter.v1.min.js"></script>
+	<script src="/dc.js-1.7.0/dc.js"></script>
+	<script src="/js/function.js"></script>
+	<script src="/library/kinetic.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/js/docs.min.js"></script></body>
+</html>

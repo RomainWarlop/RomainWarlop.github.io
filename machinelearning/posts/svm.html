@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/assets/ico/favicon.ico">
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="/js/underscore.js"></script>
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+	});
+	</script>
+	<script src="/MathJax-master/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+    <title>Romain WARLOP</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	<!-- Custom styles for this template -->
+    <link href="/css/dashboard.css" rel="stylesheet">
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+<body>
+
+<div class="navbar-wrapper">
+  <div class="container">
+
+  <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+    <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/index.html">Romain WARLOP</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+      <li class='active'><a href="/about.html">About</a></li>
+      <li><a href="/publication.html">Publication</a></li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Machine Learning stuff<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+        <li class="dropdown-header">Vulgarisation posts</li>
+          <li><a href="/machinelearning/posts/recommendersystem.html">What are recommender system ?</a></li>
+          <li><a href="/machinelearning/posts/machinelearningfordummies.html">Machine Learning for dummies</a></li>
+          <li><a href="/machinelearning/posts/precision-recall.html">How to explain precision and recall to a non data scientist ?</a></li>
+          <li><a href="/machinelearning/posts/datascientist.html">Data scientist for motivated dummies</a></li>
+        <li class="divider"></li>
+        <li class="dropdown-header">Theoretical posts</li>
+          <li><a href="/machinelearning/posts/recommendersystemssurvey.html">Recommender Systems Survey</a></li>
+          <li><a href="/machinelearning/posts/svm.html">Support Vector Machine</a></li>
+          <li><a href="/machinelearning/posts/penalizedRegression.html">Geometric interpretation of Ridge and LASSO regressions</a></li>
+        <li class="divider"></li>
+        <li class="dropdown-header">Entertainement & Application</li>
+          <li><a href="/machinelearning/entertainment/loto.html">Is lottery random?</a></li>
+          <li><a href="/machinelearning/entertainment/tennis.html">Can tennis make me rich?</a></li>
+        </ul>
+      </li>
+      </ul>
+    </div>
+    </div>
+  </div>
+
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+	
+	<div class="col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 main">
+	  <!--<h1 class="page-header">Premier League Champion</h1>-->
+	  <ul class="nav nav-tabs">
+		  <li class="active"><a href="#" style="font-weight:bold;">Support Vector Machine</a></li>
+		  <li class="dropdown">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+			  Dropdown <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+			  <li><a href="#introduction"><strong>Introduction</strong></a></li>
+			  <li><a href="#linearSVM"><strong>Linear SVM</strong></a></li>
+			  <li class="divider"></li>
+			  <li><a href="#separablecase">Separable Case</a></li>
+			  <li><a href="#nonseparablecase">Non-Separable Case</a></li>
+			  <li class="divider"></li>
+			  <li><a href="#kernelSVM"><strong>Kernel SVM</strong></a></li>
+			  <li class="divider"></li>
+			  <li><a href="#resolution"><strong>Resolution</strong></a></li>
+			  <li><a href="#method1">Method 1</a></li>
+			  <li><a href="#method2">Method 2</a></li>
+  			  <li class="divider"></li>
+			  <li><a href="#conclusion"><strong>Why is it called Support Vector Machine ?</strong></a></li>
+			  <li><a href="#solution"><strong>Solution</strong></a></li>
+			  <li><a href="#vizualisation"><strong>Vizualisation</strong></a></li>
+			  <li><a href="#supportvector"><strong>The support vector</strong></a></li>
+			</ul>
+		  </li>
+		</ul>
+	</br>
+	
+	
+	<div class="row">
+		This article is mainly inspired by <a href="http://cbio.ensmp.fr/~jvert/teaching/" target=_blank>Jean-Philippe Vert's lecture on Kernel Methods</a>.
+	<h1 id="introduction" class="sub-header">Introduction</h1>
+	The Support Vector Machine (SVM) is a supervised machine learning technique to solve binary classification problems.
+	The idea of SVM is to find the best hyperplane that will separate the data in two classes. The best hyperplane being defined by the one having 
+	the maximum margin for the most litigious point. For instance, let's visualize an example where the points are separable meaning that there exists 
+	an hyperplane (and more than one) thats separates the points perfectly into their orginal class.
+	<center><img src="/images/svminital.png"></center>
+	All the green lines are possible hyperplane that perfectly separates the points. So we have to choose the best one, and for SVM it is the one with the wider 
+	margin, i.e the wider orange line, which his the distance between the hyperplane and the most litigious point. Let's see how to find out this hyperplane.
+
+	<h1 id="linearSVM" class="sub-header">Linear SVM</h1>
+	<h2 id="separablecase">Separable Case</h1>
+	Let's work in dimension 2 ($x_1$ and $x_2$) and fix an hyperplane. The hyperplane is determined by is normal vector $w = (w_1,w_2)$ such that every point which 
+	belong to this hyerplane verify the equation $w_1 x_1 + w_2 x_2 + b =0$.
+	<center><img src="/images/svmgeometric.png"></center>
+	Let's pick a $x$ from the positive side. </br>
+	So $x = x_H + x_{H^{\perp}} = x_H + (a- \frac{b}{||w||}) \frac{w}{||w||}$ with $a$ the distance from the hyperplane.</br>
+	Thus $w^T x = w^T x_H - b + a \frac{w^T w}{||w||} = -b + a ||w||$</br>
+	Then, $a = \frac{w^Tx+b}{||w||} = \frac{w^Tx}{||w||}+\frac{b}{||w||}$</br>
+	</br>
+	Finally, to make this quantity also positive for negative case, we multiplty it by $y$. So For any $x_i$, we get :
+	$$a_i = y_i \left( \frac{w^Tx}{||w||}+\frac{b}{||w||} \right)$$
+	</br>
+	The objective of SVM is to find for each hyperplane that separates perfectly the two classes the smallest $a_i$ and make it as large as possible. Formally, this is written :
+	$$\max \min a_i$$
+	Or,
+	$$\underset{\alpha, w, b}{\max} \alpha \text{ such that } y_i(w^Tx_i+b) \geq \alpha, \forall i = 1, \cdots, n, ||w|| = 1$$
+	Let's cut the second equation into pieces:
+	<ul>
+		<li>$||w||=1$, we force the normal vector to be unitary. Any hyperplane can be defined by a unitary normal vector, nothing prevents us from doing that while we adjust the value of $b$</li>
+		<li>Any hyperplane defined by $w$ and $b$ that verifies for a given $\alpha$ positif, that $\forall i = 1, \cdot, ... n, y_i(w^Tx_i+b) \geq \alpha$ is an hyperplane that perfectly separates the 
+			points. Indeed, it means that every $x_i$ is on the right side of the hyperplane and at a distance from this hyperplane greater than $\alpha$. $\alpha$ is not necessarily the minimum margin, 
+			in fact any value smaller or equal than the minimum margin works.</li>
+		<li>And finally we take the max over all the possibilities, so we look for the hyperplane that separates the points and is as far as possible from all the points, so as far as possible from the 
+			most litigious point</li>
+	</ul>
+	So the second equation does solve the same problem and we will focus on that one from now.</br>
+	If we don't normalize $w$, we get a constraint of the for m $y_i(w^Tx_i+b) \geq \alpha ||w||$.
+	Thus, let's introduce $\alpha' = \alpha ||w||$, so problem gets
+	$$\underset{\alpha', w, b}{\max} \frac{\alpha'}{||w||} \text{ such that } y_i(w^Tx_i+b) \geq \alpha', \forall i = 1, \cdots, n$$
+	Let's rewrite once more the problem in its almost final form. The value of the margin $a$ is directly linked to the norm of $w$. If the norm increases, the coefficient $a$ decreases. So the problem 
+	is the same if we fix $a=1$ and only "play" on the value of $w$. This lead us to the following equation:
+	$$\underset{w, b}{\max} \frac{1}{||w||} \text{ such that } y_i(w^Tx_i+b) \geq 1, \forall i = 1, \cdots, n$$
+	Though we don't have a quadratic programming problem which the king of problem we easily know how to solve. To get so, we say that maximizing over the inverse of $||w||$ is the same as minimizing 
+	over $||w||$ and more specifically over $||w||^2$ which turn the problem quadratic. We add $\frac{1}{2}$ for computational convenience (the derivative will cancel the 2). We end up with a nice quadratic 
+	programming problem: quadratic cost and linear constraints.
+	$$\underset{w, b}{\min} \frac{1}{2} ||w||^2 \text{ such that } y_i(w^Tx_i+b) \geq 1, \forall i = 1, \cdots, n$$
+
+	<h2 id="nonseparablecase">Non-Separable Case</h1>
+	Now the world is unfortunately not perfect, and the class are no longer linearly separable. 
+	<center><img src="/images/svmNS.png"></center>
+	We thus introduce slack variable to fullfil the condition.
+	<ul>
+		<li>if $y_i = 1$, $w^Tx_i + b \geq 1 - \xi_i$</li>
+		<li>if $y_i = -1$, $w^Tx_i + b \leq -1 + \xi_i$</li>
+	</ul>
+	It summarizes in $y_i \left(w^Tx_i + b \geq 1 - \xi_i \right) \geq 1 - \xi_i$
+	<ul>
+		<li>if $\xi_i = 0$, the point is far enough from the hyperplane and on the right side</li>
+		<li>if $0<\xi_i \leq 1$, the point is on the right side, but it is litigious</li>
+		<li>if $\xi_i>1$, an errors occurs</li>
+	</ul>
+	So $\sum_i \xi_i$ is an upper bound on the number of erros and we want this quantity to be as small as possible (in the separable case it worth 0). The optimisation problem becomes:
+	\begin{eqnarray}
+	& \underset{w, b}{\min} & \frac{1}{2} ||w||^2 + C \sum_i^n \xi_i \\
+	& \text{such that } & y_i(w^Tx_i+b) \geq 1 - \xi_i, \forall i = 1, \cdots, n \\
+	& & \xi_i \geq 0
+	\end{eqnarray}
+	The value of $C$ is arbitrary and must be choose by cross validation. Often SVM or referred as C-SVM, that is where the C comes from. </br>
+	</br>
+	At optimum the slack variables worth either 0 or exactly 1 minus the distance from the hyperplane. So,
+	$$\xi_i = \max(0,1-y_i(w^Tx_i+b))$$
+	And just like this comes the final version of the problem !! The loss function $L$ to minimize is ...
+	\begin{eqnarray}
+	L(w) & = & \frac{1}{2} ||w||^2 + C \sum_i^n \max(0,1-y_i(w^Tx_i+b)) \\
+	& \propto &  \sum_i^n \max(0,1-y_i(w^Tx_i+b)) + \lambda ||w||^2 
+	\end{eqnarray}
+	With $\lambda = \frac{1}{C}$
+
+	<h1 id="kernelSVM" class="sub-header">Kernel SVM</h1>
+	In the linear case, the decision function $f$ is $f(x) = w^Tx_i + b$, so $L(w) = \sum_{i=1}^n \max(0,1-y_i f(x_i)) + \lambda ||w||^2$. 
+	</br>
+	Let's introduce $\Phi_{hinge}(u) = \max(0,1-u)$, thus $L(w) = \sum_{i=1}^n \Phi(y_i f(x_i) + \lambda ||w||^2$.
+	</br>
+	This problem means that we are try to find a linear function $f$ that will minimize $f$. In order to kernelize the problem, we are now looking 
+	for the function $f$ in the RKHS $\mathcal{H}$ defined by $K$ which minimize the new quantity:
+	$$L(f) = \frac{1}{n} \sum_{i=1}^n \Phi_{hinge}(y_i f(x_i)) + \lambda ||f||_{\mathcal{H}}$$
+
+	<i>Remark</i>: We can drop the 1/n, use $\lambda$ or $\lambda/2$ it doesn't change the problem.
+
+	<h1 id="resolution" class="sub-header">Resolution</h1>
+	Let's recall the <strong>representer theorem</strong>.
+	</br>
+	<ul>
+		<li>Let $\mathcal{X}$ be a set endowed with a positive definite kernel $K$, $\mathcal{H}_K$ the corresponding RKHS, and $S = \{x_1, \cdots, x_n \} \subset \mathcal{X}$ 
+		a finite set of point in $\mathcal{X}$.</li>
+		<li>Let $\Psi: \mathbb{R}^{n+1} \rightarrow \mathbb{R}$ be a funtion of $n+1$ variables, <i>stringly increasing with respect to the last variable</i>.</li>
+		<li>Then, any solution to the optimization problem:
+			$$\underset{f \in \mathcal{H}_K}{\min} \Psi(f(x_1),\cdots,f(x_n), ||f||_{\mathcal{H}_K})$$
+			admits a representation of the form:
+			$$\forall x \in \mathcal{X}, f(x) = \sum_{i=1}^n \alpha_i K(x_i,x)$$</li>
+	</ul>
+	How great this theorem is? Really great! First we learn that there is at least one solution. Second, even though the RKHS can be of infinite dimension, so that the solution 
+	could be an infinite sum, we learn that it a finite sum and moreover a linear combination of the Kernel take over the training points!
+	</br></br>
+	If you don't know about kernel, you can found the results of linear SVM by replacing $K(x_i,x_j)$ by the scalar product that is $x_i^Tx_j$. This correspond to the linear Kernel.
+	</br></br>
+	We can thus apply the representer theorem to our problem because our problem fullfill all the conditions of the theorem.
+
+	<h2 id="method1">Method 1</h2>
+	Let's note $K$ the matrix such that $[K]_{i,j} = K(x_i,x_j)$. 
+	</br>
+	Thus $||f||_{\mathcal{H}} = \alpha^T K \alpha$, and the problems rewrites :
+	$$L = \frac{1}{n} \sum_{i=1}^n \Phi_{hinge}(y_i K \alpha) + \lambda \alpha^T K \alpha$$
+	Let's note $R(u) = \frac{1}{n} \sum_{i=1}^n \Phi_{hinge}(u)$.
+	</br>
+	The Frenchel-Legendre transform of a function $f : \mathbb{R}^N \rightarrow \mathbb{R}$ is the function $f^* : \mathbb{R}^N \rightarrow R$ defined by 
+	$$f^*(u) = \underset{x \in \mathbb{R}^N}{\sup} < x,u > - f(x)$$
+	So let's compute the Frenchel-Legendre transform $R^*$ of $R$ in terms of $\Phi_{hinge}^*$ :
+	\begin{eqnarray}
+	R^{*}(u) &=& \underset{x \in \mathbb{R}^n}{\text{sup}} < x,u >-R(x) \\
+		&=& \underset{x \in \mathbb{R}^n}{\text{sup}} \sum_{i=1}^n x_i u_i -\frac{1}{n}\sum_{i=1}^n \Phi_{hinge}(x_i) \\
+		&=& \underset{x \in \mathbb{R}^n}{\text{sup}} \frac{1}{n} \sum_{i=1}^n n x_i u_i - \Phi_{hinge}(x_i) \\
+		&=& \underset{x \in \mathbb{R}^n}{\text{sup}} \frac{1}{n} \sum_{i=1}^n x_i (n u_i) - \Phi_{hinge}(x_i)\\
+		& \leq & \frac{1}{n} \sum_{i=1}^n \underset{x_i \in \mathbb{R}}{\text{sup}} (x_i (n u_i) - \Phi_{hinge}(x_i) \\
+		& \leq & \frac{1}{n} \sum_{i=1}^n \Phi_{hinge}^*(n u_i) \\
+	\end{eqnarray}
+	Though, the problem being at separated variables, we actually have $R^{*}(u) = \frac{1}{n} \sum_{i=1}^n \Phi_{hinge}^*(n u_i)$
+	</br>
+	Adding the slack variable $u = Y K \alpha$, where $Y$ is the diagonal matrix with entries $Y_{i,i} = y_i$, the problem can be rewritten as a constrained optimization problem
+	$$\underset{\alpha \in \mathbb{R}^n, u \in \mathbb{R}^n}{R(u)} + \lambda \alpha^T K \alpha \ \text{such that} \ u = Y K \alpha $$
+	There exist a constant $\mu \in \mathbb{R}^n$ such that the dual problem is written :
+	\begin{eqnarray*}
+		\underset{\mu \in \mathbb{R}^n}{\sup} \ \underset{\alpha \in \mathbb{R}^n,u \in \mathbb{R}^n}{\min} R(u) + \lambda \alpha^T K \alpha + \mu^T (u - Y K \alpha) &=& 
+		\underset{\mu \in \mathbb{R}^n}{\sup} \left( \underset{\alpha \in \mathbb{R}^n}{\min} \lambda \alpha^T K \alpha -\mu^T Y K \alpha - \underset{u \in \mathbb{R}^n}{\sup} \left(- R(u) - \mu^T u \right) \right) \\
+		&=& \underset{\mu \in \mathbb{R}^n}{\sup} \left( \underset{\alpha \in \mathbb{R}^n}{\min} \lambda \alpha^T K \alpha -\mu^T Y K \alpha -R^{*}(-\mu) \right) \\
+	\end{eqnarray*}
+	We then note $g_{\mu}{\alpha} = \lambda \alpha^T K \alpha - \mu^T Y K \alpha$.
+	</br>
+	Thus $\nabla_{\alpha}g_{\mu} = 2 \lambda K \alpha - Y K \mu = K(2 \lambda - Y \mu)$. The problem being convexe, there exist a minimum $\alpha^*$ which can be found when the gradient is null, thus :
+	$$ \alpha^* = \frac{Y \mu}{2 \lambda} + \varepsilon$$
+	with $K \varepsilon = 0$
+	</br>
+	The dual problem is finally : 
+	\begin{eqnarray*}
+	\underset{\mu \in \mathbb{R}^n}{\sup} \left( - R^{*}(-\mu) + \lambda \alpha^{*T} K \alpha^{*} - \mu^T K \alpha^{*} \right) &=& \underset{\mu \in \mathbb{R}^n}{\sup} - R^{*}(-\mu) + \frac{1}{4 \lambda} \mu^T K \mu - \frac{1}{2 \lambda} \mu^T K \mu \\
+		&=& \underset{\mu \in \mathbb{R}^n}{\sup} - R^{*}(-\mu) - \frac{1}{4\lambda} \mu^T K \mu \\
+		&=& \underset{\mu \in \mathbb{R}^n}{\sup} - R^{*}(\mu) - \frac{1}{4\lambda} \mu^T K \mu \\
+		&=& - \underset{\mu \in \mathbb{R}^n}{\min} R^{*}(\mu) + \frac{1}{4\lambda} \mu^T K \mu \\
+		&=& - \underset{\mu \in \mathbb{R}^n}{\min} \frac{1}{n}\sum_{i=1}^n \Phi_{hinge,y_i}^* (n\mu_i) + \frac{1}{4\lambda} \mu^T K \mu
+	\end{eqnarray*}
+	One can now (quite) easily check that:
+	$$
+	\Phi_{hinge,y}^*(u) = \left \{
+	\begin{aligned}
+	& yu & \text{if} \ yu \in [-1,0] \\
+	& + \infty & \text{otherwise}
+	\end{aligned}
+	\right.
+	$$ 
+	The problem can be now written:
+	\begin{eqnarray*}
+	- \underset{\mu \in \mathbb{R}^n}{\min} \frac{1}{n}\sum_{i=1}^n \Phi_{hinge,y_i}^* (n\mu_i) + \frac{1}{4\lambda} \mu^T K \mu &=& -\underset{\mu \in \mathbb{R}^n}{\min} \frac{1}{n} \sum_{i=1}^n n \mu_i y_i + \frac{1}{4\lambda} \mu^T K \mu \\
+	& & \text{with } n \mu_i y_i \in [-1,0] \\
+	&=& - \underset{\mu \in \mathbb{R}^n}{\min} \sum_{i=1}^n \mu_i y_i + \frac{1}{4\lambda} \mu^T K \mu \\
+	& & \text{with } \mu_i y_i \in [-1/n,0] \\
+	\end{eqnarray*} 
+	Let's note $\forall i, \nu_i = -\mu_i y_i$.
+	We get:
+	$$ - \underset{0 \leq \nu \leq 1/n}{\min} \sum_{i=1}^n -\nu_i + \frac{1}{4\lambda} \sum_{i=1}^n \sum_{j=1}^n y_iy_j\nu_i\nu_j K(x_i,x_j)$$
+	So finally:
+	$$ \underset{0 \leq \nu_i \leq 1/n,\forall i}{\max} \sum_{i=1}^n \nu_i - \frac{1}{4\lambda} \sum_{i=1}^n \sum_{j=1}^n y_iy_j\nu_i\nu_j K(x_i,x_j)$$
+
+
+	<h2 id="method2">Method 2</h2>
+	The initial minimization problem is:
+	$$L(f) = \frac{1}{n} \sum_{i=1}^n \Phi_{hinge}(y_i f(x_i)) + \lambda ||f||_{\mathcal{H}}$$
+	The optimization problem is convex but not differentiable, so for this method we reformulate the problem with the slack variables:
+	\begin{eqnarray}
+	& \underset{f \in \mathcal{H}, \xi \in \mathbb{R}^n}{\min} & \frac{1}{n} \sum_i^n \xi_i + \lambda ||f||^2_{\mathcal{H}} \\
+	& \text{subject to} & \xi_i \geq \Phi_{hinge}(y_if(x_i))
+	\end{eqnarray}
+	Thanks to the representer theorem we know that $f(x) = \sum_{i=1}^n \alpha_i K(x_i,x)$.
+	<\br>
+	The problem can be rewritten as an optimization problem in $\alpha$ and $\xi$:
+	\begin{eqnarray}
+	& \underset{f \in \mathcal{H}, \xi \in \mathbb{R}^n}{\min} & \frac{1}{n} \sum_i^n \xi_i + \lambda \alpha^T K \alpha \\
+	& \text{subject to} & y_i \sum_{i=1}^n \alpha_j K(x_i,x_j) + \xi_i -1 \geq 0 \\
+	& & \xi_i \geq 0
+	\end{eqnarray}
+	Let us then introduce the Lagrange multipliers $\mu \in \mathbb{R}^n$ and $\nu \in \mathbb{R}^n$. The Lagrangian problem is :
+	$$L(\alpha,\xi,\mu,\nu) = \frac{1}{n} \sum_i^n \xi_i + \lambda \alpha^T K \alpha - \sum_{i=1}^n \nu_i \left[y_i \sum_{j=1}^n \alpha_j K(x_i,x_j)+\xi-1 \right]
+		- \sum_{i=1}^n \mu_i \xi_i$$
+
+	<h3>Minimizing with respect to $\alpha$</h3>
+	$$\nabla_{\alpha} L = 2 \lambda K \alpha - K Y \nu = K(2 \lambda \alpha - Y \nu)$$
+	where $Y$ is the diagonal matrix with entries $Y_{i,i} = y_i$.
+	Solving $\nabla_{\alpha} L = 0$ leads do 
+	$$ \alpha = \frac{Y \nu}{2\lambda} + \varepsilon$$
+	with $K \varepsilon = 0$, but $\varepsilon$ does not change $f$ so we can choose $\varepsilon = 0$.
+
+	<h3>Minimizing with respect to $\xi$</h3>
+	$L$ is a linear function in $\xi$ so its minimum is $- \infty$ except when $\nabla_{\xi} L = 0$, that is :
+	$$\frac{\partial L}{\partial \xi_i} = \frac{1}{n}-\mu_i-\nu_i = 0$$ 
+
+	We therefore obtain the Lagrange dual function:
+	\begin{eqnarray}
+	q(\mu,\nu) & = & \underset{\alpha \in \mathbb{R}^n, \xi \in \mathbb{R}^n}{\inf} L(\alpha,\xi,\mu,\nu) \\
+	& =& \left \{
+	\begin{aligned}
+	& \sum_{i=1}^n \nu_i - \frac{1}{4\lambda} \sum_{i=1}^n \sum_{j=1}^n y_iy_j\nu_i\nu_j K(x_i,x_j) & \text{if} \ \nu_i+\mu_i = \frac{1}{n} \forall i \\
+	& - \infty & \text{otherwise}
+	\end{aligned}
+	\right.
+	\end{eqnarray}
+
+	Finally, the dual problem is
+	\begin{eqnarray}
+	& \text{maximize} & q(\mu,\nu) \\
+	& \text{subject to} & \mu \geq 0, \nu \geq 0
+	\end{eqnarray}
+	Which is (hopefully) exactly the same problem as obtain with the first method ! Indeed,
+	<ul>
+		<li>If $\nu_i \geq 1/n$ for some $i$, then $q(\mu,\nu) = - \infty$</li>
+		<li>If $0 \leq \nu_i \leq 1/n$ for all $i$, then the dual function takes finite values that depend only on $\nu$ by taking $\mu_i = 1/n - \nu_i$</li>
+	</ul>
+
+	<h1 id="conclusion" class="sub-header">Why is it called Support Vector Machine ?</h1>
+	<h2 id="solution" >Solution</h2>
+	Once the dual problem is solved in $\nu$ we get a solution of the primal problem by $\alpha = \frac{Y\nu}{2 \lambda}$. We can 
+	therefore directly plug this into the dual problem to obtain the QP that $\alpha$ must solve:
+
+	\begin{eqnarray}
+	& \underset{\alpha \in \mathbb{R}^d}{\max} & 2 \sum_i^n \alpha_i y_i - \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j K(x_i,x_j) = 
+		2 \alpha^T y - \alpha^T K \alpha \\
+	& \text{subject to} & 0 \leq \alpha_i y_i \leq \frac{1}{2 \lambda n}, \forall i
+	\end{eqnarray}
+
+	We apply the Karush-Kuhn-Tucker (KKT) theorem. The obtained conditions are: 
+	<ul>
+		<li>$\alpha_i \left[ y_i f(x_i) + \xi_1 -1 \right] = 0$</li>
+		<li>$\left( \alpha_i - \frac{y_i}{2 \lambda n} \right) \xi_i = 0$</li>
+	</ul>
+
+	Three possibilities arises:
+	<ul>
+		<li>If $\alpha_i = 0$, then the second constraint is active: $\xi_i=0$. This implies $y_i f(x_i) \geq 1$</li>
+		<li>If $0 < y_i \alpha_i < \frac{1}{2 \lambda n}$, then both constraints are active: $\xi_i = 0$ and $y_i f(x_i) + \xi_i -1=0$.
+			This implies y_i f(x_i) = 1</li>
+		<li>If $\alpha_i = \frac{y_i}{2 \lambda n}$, then the second constraint is not active ($\xi \geq 0$), while the first one is active: 
+			$y_if (x_i)+\xi_i = 1$. Thus, $y_i f(x_i) \leq 1$</li>
+	</ul>
+
+	<h2 id="vizualisation">Vizualisation</h2>
+	<center>
+	<img src="/images/svm1.png" width="400px"><img src="/images/svm2.png" width="400px">
+	</center>
+
+	<h2 id="supportvector">The support vector</h2>
+	Consequently to KKT conditions, many $\alpha_i$ worth 0. Thus, only the remaining training points with $\alpha_i \neq 0$ are involved in the computation of $f$. 
+	They are called the support vectors.
+	$$\forall x, f(x) = \sum_{i=1}^n \alpha_i K(x_i,x) = \sum_{i \in SV} \alpha_i K(x_i,x)$$
+	with SV the set of support vectors.
+	</br>
+	This lead to sparse solution in $\alpha$ thus fast algorithms both for training and for classification of new points, since the evaluation has to be done only for
+	support vectors.
+
+
+	</div>
+	
+	</div>
+	
+          
+	</div>
+</div>
+</body>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script src="/kinetic/kinetic.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+</html>

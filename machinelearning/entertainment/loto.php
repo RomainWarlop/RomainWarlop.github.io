@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/assets/ico/favicon.ico">
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="/js/d3.parcoords_per.js"></script>
+	<script src="/js/underscore.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/d3.parcoords.css">
+	<link rel="stylesheet" type="text/css" href="/css/bubbleChart.css">
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+	});
+	</script>
+	<script src="/MathJax-master/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<link rel="stylesheet" type="text/css" href="/css/d3.parcoords.css">
+	<link rel="stylesheet" type="text/css" href="/css/bubbleChart.css">
+    <title>Romain WARLOP</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	<!-- Custom styles for this template -->
+    <link href="/css/dashboard.css" rel="stylesheet">
+	<link href="/css/crossfilter.css" rel="stylesheet">
+	<link href="/dc.js-1.7.0/dc.css" rel="stylesheet">
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+<body>
+
+<?php include($_SERVER['DOCUMENT_ROOT'].'/navbar.php'); ?>
+
+<div class="container-fluid">
+  <div class="row">
+	
+	<div class="col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 main">
+	  <!--<h1 class="page-header">Premier League Champion</h1>-->
+	  <ul class="nav nav-tabs">
+		  <li class="active"><a href="#" style="font-weight:bold;">Is lottery random?</a></li>
+		  <li class="dropdown">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+			  Dropdown <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+			  <li><a href="#chi2test"><strong>A word on the chi2 test</strong></a></li>
+			  <li><a href="#MCchi2">Monte Carlo computation of the chi2 test on a dice</a></li>
+			  <li class="divider"></li>
+			  <li><a href="#onloto"><strong>Let's play with the lottery data</strong></a></li>
+			  <li><a href="#numbers">Does some numbers get out more often ?</a></li>
+			  <li><a href="#features">Look for features in the data</a></li>
+			</ul>
+			<li class="lastupdate">Last Update - 2016/02/15</li>
+		  </li>
+		</ul>
+	</br>
+	
+	<div class="panel panel-info">
+	<div class="panel-heading">
+		<h3 class="panel-title">Abstract</h3>
+	</div>
+	<div class="panel-body">
+	The lottery is supposed to be a game of chance. So let's check if it's true !
+	</br>For this study, I get the past result of the french lottery available <a href="https://www.fdj.fr/jeux/jeux-de-tirage/loto/statistiques" target=_blank>here</a> 
+	from October 2008 to to February 2016 with a total of 1152 trials.
+	</br>The goals of this post are first to be present concrete application of statistical tests on real data and then 
+	look for some funny features that could be in the lottery dataset. 
+	The chi2 test being the most known statistical test, I will first give a short introduction on how this test works 
+	as an example for statistical tests and show how to compute the 
+	statistic with an experiment on dice. Then, we will move to the lottery dataset to first check randomness hypothesis 
+	on the output results using our chi2 test knowledge. Finally, We will look for some behaviour that may 
+	appears in this datasets.
+	</br>
+	From time to time I will try to edit this article adding result for a new features that may appear in the data 
+	and also update the dataset with the new data. Here are the findings so far.
+	<ul>
+		<li>Choose the 'numero chance' 1</li>
+		<li>There are 42% less winners on Mondays than the rest of the week. Let's play on Mondays to have less 
+			opponent and less people to share little win with ? </li>
+		<li>There are 42% less winners in June than the rest of the year.</li>
+	</ul>
+	
+	</br>
+	You can either read the text version of this article to learn more about the chi2 test and see the results, or 
+	the python notebook version to see the code behind the results. There will be less explanation is the 
+	<a href="loto.html" target=_blank>notebook</a> version but it could be interesting to see what is behind. 
+	The python code is also available on my <a href="https://github.com/RomainWarlop/loto" target=_blank>github</a>.
+	</div>
+	</div>
+	
+	<div class="row">
+	<center><h1 id="chi2test" class="header">A word on the chi2 test</h1></center>
+	The chi2 test (chi squared test) is a statistical test use to check if a given sample follow a particular law or 
+	to check if the difference between two sets of categorical 
+	variables happened by chance (because they are just different samples from the same distribution) or if they are really 
+	different.
+	To do so, we have to define the null hypothesis H0 that state that the frequency distribution of 
+	the observed distrution follow a particular theoretical distribution (or state that the two sets 
+	are sample of the same law). For each test, the chi2 square formula 
+	will return the chi2 statistic of the current estimation. Given the obtained value we either accept or reject 
+	the null hypothesis. To decide, the statiscian has a chi2 table (available online), which will tell the probability 
+	of obtaining the greater value of the statistic given the degree of freedom (the statistic worth 0 is the sample 
+	follow perfectly the theoretical distribution). Most of the time, if the obtain statistic is lower than the 5% 
+	threshold (that is there is more than 5% of chance to obtain a greater statistic from a real sample for the theoretical 
+	distribution) we accept the null hypothesis. An other way to decide is to compute the p-value. The p-value is 
+	the smallest level at which the test would reject the null hypothesis. If p is lower than 0.05, meaning that 
+	there is less than 5% of chance to obtain a greater statistic from a real sample for the theoretical 
+	distribution, we reject H0.</br>
+	In practice the chi2 table is construct with monte carlo method. The protocol consist in simulation a sample 
+	from the theoretical distribution, compute the chi2 statistic and store it. We do this process a lot of time 
+	(100 000 times for instance). From all this realisation, we can then compute an estimation of the probability 
+	of having a score greater than x and being really sample from the theoretical distribution. 
+
+	<center><h3 id="MCchi2" class="header">Monte Carlo computation of the chi2 test on a dice</h3></center>
+	For this experiment the protocol consist in rolling a dice $n$ times. Thus we except to get each number $n/6=p$ times. 
+	The corresponding chi2 test is then the normalize square difference between the number of times we get each number 
+	and the theorethical number (here $p$):
+	$$ T = \sum_{i=1}^6 \frac{(\text{number of }i - p)^2}{p}$$
+	We repeat this process an important number of times which will give us a range a possible values an their corresponding 
+	experimental probability. I run this test 10000 times, rolling the dice (with a computer of course) for each test 1000 times. 
+	Taking the 95% percentile, I get the value 11.06, which is close to the table value of 11.07 for 5 degrees of 
+	freedom. There are 5 degrees of freedom because we know the total number of test, so if I give you the number of 
+	times I obtained the number from 1 to 5, you can directly know how many times I get the number 6. 
+	Making much more test will make us converge to this value. 
+	</div>
+
+	<div class="row">
+	<center><h1 id="onloto" class="header">Let's play with the lottery data</h1></center>
+	With this short introducton on the chi2 test, we can now check several randomness hypothesis on the lottery output. 
+	We will check if all the number are really equiprobable, likewise for the joker number and for pairs of number. 
+	Then we will look at the winning probability evolution with time (is it harder and harder to win ?). Finally, 
+	if there is several winner at the same rank (the same number of correct number), the price is divided between them. 
+	Thus maybe there is a better day of the week or the month to play if there are less opponents ?
+
+	<center><h2 id="numbers" class="header">Does some numbers get out more often ?</h2></center>
+	Let's look in the historicl data to see if there is some number that we should play to increase a little our 
+	winning chance. 
+
+	<h3 class="header">Classic numbers</h3>
+	The first thing we check is each number individually. There are 49 possibilities, there have been 1152 trials and 
+	5 balls are out at each trials so we should have seen each number around 117 times. Here is the number of times 
+	we have seen each number.
+	<center><img src='/images/loto_numbers.png' width='500px'></center> 
+	To check if this difference is odd or not, we use a chi2 test ! After computation we found a statistic of 45.87, 
+	which is far below the 5% threshold. The p-value is 0.56, so really high. We can be very confident that this number 
+	are really random. 
+	<h3 class="header">The 'numero chance'</h3>
+	Let's move to the 'numero chance'. This number is an other number outputed by the french lottery and can be between 
+	1 and 10. If you can the right one, you get extra money. As there is only one 'numero chance', we should have 
+	seen each number around 1152/10 = 115 times. Here is the number of times 
+	we have seen each number.
+	<center><img src='/images/loto_chancenumber.png' width='500px'></center> 
+	The number 1 seems to get pull at little more often ... Let's check it with a chi2 test ! The computation gives 
+	a statistic of 17.27 and the 5% threshold with 9 degrees of freedom is ... 16.92 ! So we should reject the H0 
+	hypothesis and maybe it would be a good strategy to play the number 1 as the 'numero chance'. However, there is 
+	only one numero chance for each trial whereas regular number are pull five times, so we have more observations 
+	for them. But as far as we know, 1 is a good number !
+
+	<h3 class="header">What about pairs ?</h3>
+	Is there two numbers that are more often pick together ? If so, maybe we should put these two in our grill to 
+	increase our chance. Here is the repartition of the pairs.
+	<center><img src='/images/loto_pairs.png' width='600px'></center> 
+	There are 49*48/2 = 1176 possibilities. In a trial there are 10 possibles pairs, so we have observed 11520 pairs 
+	in our dataset. Each pairs should have be seen around 9 or 10 times. Here the maximum value is obtained for the 
+	pair (43,10) obtained 22 times and the mean is 9.59. The chi2 test gives a statistic of 1224.49. I did not find 
+	the table for such a high number of degrees of freedom, but python return a p-value of 0.15 which is high enough 
+	to accept the H0 hypothesis and say that those results are random.
+
+	<center><h2 id="features" class="header">Look for features in the data</h2></center>
+	This section will be a miscellaneous of possible features that may appear in the data. I'll try to edit 
+	this section from time to time. 
+
+	<h3 class="header">Winning chance over ... </h3>
+	Does to winning probability change over time ? Is there more winner now than before ? I don't have access to the 
+	number of participant neither to the winning prize, so the winning probability and the expected prize can not 
+	be computed. But assuming that the game is random (as we check before), I assume that the winning probability is 
+	stable, so if there are less winners, I assume that there are less participants, so less people to split little 
+	win with... 
+
+	<h4>... the years</h4>
+	Here are the number of people that have n correct numbers over 6 (5 + numero chance), over time. 
+	<center><img src='/images/loto_overtime.png' width='600px'></center> 
+	There seems to be a lot of lucky people at the begining ot 2012 ! Otherwise there does not seems to 
+	be a winning trend over the years, so there is not more people playing now than before. 
+
+	<h4>... the day of the week</h4>
+	<center><img src='/images/loto_dayofweek.png' width='600px'></center> 
+	There are far less people winning on Monday. Most people seems to play on week end, so if there were no 
+	big winners during the week-end, meaning the prize is still high, it may be good to play the next Monday. 
+	There are in average 40% less winners (thus opponents) on Mondays.
+
+	<h4>... the month of the year</h4>
+	<center><img src='/images/loto_monthofyear.png' width='600px'></center> 
+	It seems to be less opponents during summer time, 9% less in June.
+	</div>
+	
+
+
+	
+	
+
+	
+
+</div>
+</body>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script>sidebarAactiveli("/machinelearning/entertainment/loto.php");</script>
+	<script src="/js/crossfilter.v1.min.js"></script>
+	<script src="/dc.js-1.7.0/dc.js"></script>
+	<script src="/js/function.js"></script>
+	<script src="/library/kinetic.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/js/docs.min.js"></script></body>
+</html>

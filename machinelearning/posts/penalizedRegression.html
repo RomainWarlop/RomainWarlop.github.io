@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/assets/ico/favicon.ico">
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="/js/d3.parcoords_per.js"></script>
+	<script src="/js/underscore.js"></script>
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+	});
+	</script>
+	<script src="/MathJax-master/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<link rel="stylesheet" type="text/css" href="/css/d3.parcoords.css">
+	<link rel="stylesheet" type="text/css" href="/css/bubbleChart.css">
+	
+    <title>Romain WARLOP</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	<!-- Custom styles for this template -->
+    <link href="/css/dashboard.css" rel="stylesheet">
+	<link href="/css/crossfilter.css" rel="stylesheet">
+	<link href="/dc.js-1.7.0/dc.css" rel="stylesheet">
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+<body>
+
+<?php include($_SERVER['DOCUMENT_ROOT'].'/navbar.php'); ?>
+
+<div class="container-fluid">
+  <div class="row">
+	
+	<div class="col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 main">
+	  <!--<h1 class="page-header">Premier League Champion</h1>-->
+	  <ul class="nav nav-tabs">
+		  <li class="active"><a href="#" style="font-weight:bold;">Geometric interpretation of Ridge and LASSO regressions</a></li>
+		  <li class="dropdown">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+			  Dropdown <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+			  <li><a href="#introduction"><strong>Introduction</strong></a></li>
+			  <li><a href="#firstTerm"><strong>First term</strong></a></li>
+			  <li><a href="#penaltyTerm"><strong>Penalty term</strong></a></li>
+			  <li><a href="#bothTerms"><strong>Sum of the two terms</strong></a></li>
+			  <li><a href="#ridgePenaltyPlot">Ridge Plot</a></li>
+			  <li><a href="#lassoPenaltyPlot">LASSO Plot</a></li>
+			  <li><a href="#conclusion"><strong>Conclusion</strong></a></li>
+			</ul>
+			<li class="lastupdate">Last Update - 2015/03/07</li>
+		  </li>
+		</ul>
+	</br>
+	
+	
+	<div class="row">
+	<h2 id="introduction" class="sub-header">Introduction</h2>
+	Ridge and LASSO regressions are two common ways to regularized linear regression in order to avoid overfitting. LASSO has a tendency to 
+	put some coefficient exactly equal to 0, which is almost never the case for Ridge regression. There is a theoretical explanation based on 
+	the non differentiability of the absolute value on 0, but here we will focus on geometric interpretation which help to see clearer.
+	</br>
+	Let's formalize the problem in dimension 2. To objective of the linear regression is to find the coefficient $\beta_0$, $\beta_1$ and $\beta_2$ in order to 
+	minimize $$f(\beta) = \sum_{i=1}^n (y_i - (\beta_1 x_{i,1} + \beta_2 x_{i,2} + \beta_0))^2$$.
+	</br>
+	Penalisation add constraint to this problem :
+	<ul>
+		<li> Ridge : such that $||\beta_1||^2 + ||\beta_2||^2 < \mu$ which thanks to Lagrange multiplier reformulate the problem as 
+			$\sum_{i=1}^n (y_i - (\beta_1 x_{i,1} + \beta_2 x_{i,2} + \beta_0))^2 + \lambda (||\beta_1||^2 + ||\beta_2||^2)$ </li>
+		<li> LASSO : such that $|\beta_1| + |\beta_2| < \mu$ which thanks to Lagrange multiplier reformulate the problem as 
+			$\sum_{i=1}^n (y_i - (\beta_1 x_{i,1} + \beta_2 x_{i,2} + \beta_0))^2 + \lambda (|\beta_1| + |\beta_2|)$ </li>
+	</ul>
+	We note $g_{Ridge}(\beta) = \lambda (||\beta_1||^2 + ||\beta_2||^2)$ and $g_{LASSO}(\beta) = \lambda (|\beta_1| + |\beta_2|)$.
+	
+	<h2 id="firstTerm" class="sub-header">First term</h2>
+	The first term in the minimisation problem is $f(\beta)$ which is a conic. Let's compute what conic it is.
+	</br>
+	If we expand the formula, we get : </br>
+	<table>
+	<tr><td>$\sum_{i=1}^n (y_i - (\beta_1 x_{i,1} + \beta_2 x_{i,2} + \beta_0))^2$</td>
+		<td>$=\sum_{i=1}^n y_i^2 + (\beta_1 x_{i,1} + \beta_2 x_{i,2} + \beta_0)^2 - 2(\beta_1 x_{i,1} + \beta_2 x_{i,2} + \beta_0) y_i$
+	</tr>
+	<tr><td></td>
+		<td>$=\sum_{i=1}^n y_i^2 + \beta_1^2 x_{i,1}^2 + \beta_2^2 x_{i,2}^2 + \beta_0^2 + 2 \beta_1 \beta_2 x_{i,2} x_{i,1} + 2 \beta_0 \beta_1 x_{i,1} + 2 \beta_0 \beta_2 x_{i,2} 
+		- 2(\beta_1 x_{i,1} + \beta_2 x_{i,2} + \beta_0)y_i$</td>
+	</tr>
+	<tr><td></td>
+		<td>$=(\sum_{i=1}^n x_{i,1}^2) \beta_1^2 + (2 \sum_{i=1}^n x_{i,2} x_{i,1}) \beta_1 \beta_2 + (\sum_{i=1}^n x_{i,2}^2) \beta_2^2 + (2 \sum_{i=1}^n (\beta_0 - y_i) x_{i,1}) \beta_1 
+		+ (2 \sum_{i=1}^n (\beta_0 - y_i) x_{i,2}) \beta_2 + (\sum_{i=1}^n \beta_0^2 - 2 \beta_0 y_i)$</td>
+	</tr>
+	<tr><td></td>
+		<td>$=A \beta_1^2 + B \beta_1 \beta_2 + C \beta_2^2 + D \beta_1 + E \beta_2 + F$</td>
+	</tr>
+	</table>
+	With,
+	<table>
+	<tr><td>$A=$</td><td>$\sum_{i=1}^n x_{i,1}^2$</td></tr>
+	<tr><td>$B=$</td><td>$2 \sum_{i=1}^n x_{i,2} x_{i,1}$</td></tr>
+	<tr><td>$C=$</td><td>$\sum_{i=1}^n x_{i,2}^2$</td></tr>
+	<tr><td>$D=$</td><td>$2 \sum_{i=1}^n (\beta_0 - y_i) x_{i,1}$</td></tr>
+	<tr><td>$E=$</td><td>$2 \sum_{i=1}^n (\beta_0 - y_i) x_{i,2}$</td></tr>
+	<tr><td>$F=$</td><td>$\sum_{i=1}^n \beta_0^2 - 2 \beta_0 y_i$</td></tr>
+	</table>
+	There are three possibilities (see <a href="http://en.wikipedia.org/wiki/Conic_section" target=_blank>wikipedia</a>)
+	<ul>
+		<li>$B^2-4AC <0$, the equation represents an ellipse</li>
+		<li>$B^2-4AC =0$, the equation represents a parabola</li>
+		<li>$B^2-4AC >0$, the equation represents a hyperbola</li>
+	</ul>
+	Here we have, $B^2-4AC = 4 [(\sum_{i=1}^n x_{i,2} x_{i,1})^2 - \sum_{i=1}^n x_{i,1}^2 \sum_{i=1}^n x_{i,2}^2]$ which is negative thanks to 
+	<a href="http://en.wikipedia.org/wiki/Cauchy%E2%80%93Schwarz_inequality" target=_blank>Cauchy–Schwarz inequality</a>. Thus, we have an ellipse.
+	</br>
+	Although, we cannot always have $f(\beta) = 0$, we want to minimize $f$, so for a given value of $\beta$ we have $f(\beta) = m_{\beta}$. So the conic 
+	equation changes to $F_{\beta} = F-m_{\beta}$, so in the 3D space $(\beta_1,\beta_2,z)$, we can a parabola where each cut by the plan $z=constant$ is an ellipse.
+	</br>
+	In the reduce form of the equation, the radius of the ellipse are proportional to $-F_{\beta} = m_{\beta}-F$, thus if $m_{\beta}$ increase, the radius increase.
+	</br></br>
+	<center><img src="/images/parabole.png"></center>
+	Once projected on the plan $(\beta_1,\beta_2)$, we get an ellipse which a certain angle (which can be expressed from A,C and B), not necessary centered.
+	<center><div id="ellipses"></div></center>
+	
+	<h2 id="penaltyTerm" class="sub-header">Penalty term</h2>
+	The representation of the penalty term is much more easy. 
+	<ul>
+		<li>$g_{Ridge}(\beta) = c_{\beta}^{Ridge}$ is a circle of radius $c_{\beta}^{Ridge}$</li>
+		<li>$g_{LASSO}(\beta) = c_{\beta}^{LASSO}$ is a square of demi-diagonal $c_{\beta}^{LASSO}$</li>
+	</ul>
+	<center><div id="penalties"></div></center>
+	
+	<h2 id="bothTerms" class="sub-header">Sum of the two terms</h2>
+	The aim is to minimize over a constraint, thus the two graphs have to meet otherwise the constraint is not fulfilled.</br>
+	Let's say we have fix the size of the penalty (usually we test different value of the penalty through the choice of $\lambda$ 
+	and perform K-fold cross validation to select the best one). If the ellipse doesn't meet the penalty area, we have the increase 
+	the size of the ellipse up to cross the penalty. The minimisation of the sum of the two terms hence is achieved on the edge of 
+	the penalty area.
+	<h3 id="ridgePenaltyPlot" class="sub-header">Ridge plot</h2>
+	<center><div id="ridgePenalty"></div></center>
+	
+	<h3 id="lassoPenaltyPlot" class="sub-header">LASSO plot</h2>
+	<center><div id="lassoPenalty"></div></center>
+	
+	<h2 id="conclusion" class="sub-header">Conclusion</h2>
+	Just by looking at the last two plots we see that given the shape of the penalty and the ellipse, we LASSO penalty has a tendency 
+	to put some coefficient(s) to 0 because the graphs are more likely to meet on some axis. You can plot several ellipse and check wether 
+	or not the LASSO and ridge penalties will cancel a coefficient. Of course the LASSO penalty won't always cancel a penalty, for instance 
+	if the ellipses were a little higher, the two graphs would meet on a edge and not on a vertex. But it the ellipse is close to an axis, 
+	the chance that the meeting point is exactly on the axis is higher with the LASSO penalty.
+	</br>
+	I let you imagine what happen in dimension greater than 2 ... ;)
+	</div>
+	
+	</div>
+	
+          
+	</div>
+</div>
+</body>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script src="/js/crossfilter.v1.min.js"></script>
+	<script src="/dc.js-1.7.0/dc.js"></script>
+	<script src="/js/function.js"></script>
+	<script src="/library/kinetic.js"></script>
+	<script src="/js/penalizedRregression.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/js/docs.min.js"></script></body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/assets/ico/favicon.ico">
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="/js/d3.parcoords_per.js"></script>
+	<script src="/js/underscore.js"></script>
+	<script type="text/x-mathjax-config">
+	MathJax.Hub.Config({
+	  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+	});
+	</script>
+	<script src="/MathJax-master/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<link rel="stylesheet" type="text/css" href="/css/d3.parcoords.css">
+	<link rel="stylesheet" type="text/css" href="/css/bubbleChart.css">
+	
+    <title>Romain WARLOP</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	<!-- Custom styles for this template -->
+    <link href="/css/dashboard.css" rel="stylesheet">
+	<link href="/css/crossfilter.css" rel="stylesheet">
+	<link href="/dc.js-1.7.0/dc.css" rel="stylesheet">
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+<body>
+
+<?php include($_SERVER['DOCUMENT_ROOT'].'/navbar.php'); ?>
+
+<div class="container-fluid">
+  <div class="row">
+	
+	<div class="col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 main">
+	  <ul class="nav nav-tabs">
+		  <li class="active"><a href="#" style="font-weight:bold;">Recommender System</a></li>
+		  <li class="dropdown">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+			  Dropdown <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+			  <li><a href="#itemtoitem"><strong>Item to item recommendation</strong></a></li>
+			  <li><a href="#arules">Association rules</a></li>
+			  <li><a href="#itimodelbased">Model based</a></li>
+			  <li><a href="#itimemorybased">Memory based</a></li>
+			  <li class="divider"></li>
+			  <li><a href="#useritemrecommendation"><strong>User-item recommendation</strong></a></li>
+			  <li><a href="#contentbased">Content based</a></li>
+			  <li><a href="#collaborativefiltering">Collaborative Filtering</a></li>
+			  <li><a href="#CFmemorybased"><em>&nbsp &nbsp &nbsp &nbsp Memory based</em></a></li>
+			  <li><a href="#CFmodelbased"><em>&nbsp &nbsp &nbsp &nbsp Model based</em></a></li>
+			  <li><a href="#hybridRS">Hybrid methods</a></li>
+			  <li class="divider"></li>
+			  <li><a href="#goingfurther"><strong>Going further</strong></a></li>
+			  <li><a href="#explorexploit">Exploration/Exploitation</a></li>
+			  <li><a href="#MTL">Multi-Task Learning</a></li>
+			  <li><a href="#transferlearning">Transfer Learning</a></li>
+			</ul>
+			<li class="lastupdate">2015/08/03</li>
+		  </li>
+		</ul>
+	</br>
+	
+	
+	<div class="panel panel-info">
+	<div class="panel-heading">
+		<h3 class="panel-title">Abstract</h3>
+	</div>
+	<div class="panel-body">
+	Recommender system is a very active field of machine learning, especially since the Netflix Challenge (late 2006-2009). The main goal is to be able 
+	to predict for each user the item she will like the most and thus being able to recommend it to her. The application is very wide since the recommendated 
+	item could be movies, books, hotels, clothes, flats, houses, TV program, ... Besides the recommendation can take many form: a personnalized e-mail, a 
+	personnalized web page, a smart phone notification, ... </br>
+	However, making good recommendation does go by itself, there are several difficulties. The main challenge of this 
+	field is to deal with data sparsity, meaning that we have only few values to learn a lot. Indeed, most users have 
+	seen only a little fraction of possible items and that's why we want to recommend something to them. But it is 
+	difficult to infer taste a large number of item based on only few feedback. This is a difficulty to cope with 
+	but it is also why it needs machine learning ! </br>
+	In this article we will see different solution to perform recommendation divided into two categories here : item to 
+	item recommendation user-item recommendation.
+	</div>
+	</div>
+	
+	
+	<div class="row">
+	<center><h1 id="itemtoitem" class="header">Item to item recommendation</h1></center>
+	<center><img src="/images/itemtoitemReco.png" /></center>
+	The item to item recommendation is a little specific. The aim is to recommend items to ... an item. The application are for instance to recommend similar items on an item's 
+	page, that is when looking at the page a specific movie/book, you could like to see other related movies/books. You could end up with not particular outstanding recommendation 
+	like the one on the picture: if you liked one of Game Of Thrones book, you may like an other Game Of Thrones book... But even if this result does not seems very interesting, Amazon 
+	must present the other GoT books on each GoT book page, it is an obvious relationship. But you do not want to write those relationship by hand. Indeed Amazon have millions of 
+	books and millions of other product so there is no way one would write those relationship one by one for each book. What you want is a model that could do it by itself, automatically. 
+	And that is the amazing thing item to item recommendation does: it find all the relationship for you, some are obvious, other not, but you never have to do anything by hand. 
+	Ideally, you would like specific recommendation for each user, you would like not only to recommend related movies but related movies she will like so perform user-item 
+	recommendation. Unfortunately sometimes the input dataset is not rich enough to do so. For instance when user don't provide enough feedback, personnalized recommendation is not 
+	effective. Furthermore, if we want to make those recommandation personnalized we should be able to stock the list of the recommendation of each user for each item in memory, and 
+	sometimes website don't have such ability. Still, interesting things can be done with item to item recommendation, so let's see how to do so.
+
+	<h2 id="arules" class="sub-header">Association rules</h2>
+	As the name suggests, two items are related if they are frequently associated together. The definition of the association is up to the data scientist and the problem. 
+	For instance, working for e-commerce, if two products have been added to the basket by the same user during the same visit on the website, we say that the assocation of those 
+	two product increases by 1. The difficulty here is to compute efficiently this association since there could be thousand of products and millions of users. Dealing with 
+	video recommendation, for instance for youtube, if a user have seen two videos during the same visit we said that their association increases by 1. </br>
+	We are now able to make a recommendation: at the end of the video, or on the product page of the e-commerce website, we can now print the top 5 (or 10 or whatever) most 
+	associated items, giving us an item to item recommendation.
+
+	<div class="row">
+	<span class="col-md-4 col-md-offset-1">
+	<table class="table table-bordered">
+	<tr><th></th><th colspan=4>Product add to basket</th></tr>
+	<tr><td>user 1</td><td>A</td><td>C</td><td>D</td><td>E</td></tr>
+	<tr><td>user 2</td><td>A</td><td>B</td><td>C</td><td>D</td></tr>
+	<tr><td>user 3</td><td>B</td><td>D</td><td>E</td><td></td></tr>
+	<tr><td>user 4</td><td>C</td><td>E</td><td></td><td></td></tr>
+	<tr><td>user 5</td><td>A</td><td>B</td><td>C</td><td>E</td></tr>
+	<tr><td>user 6</td><td>C</td><td>D</td><td>E</td><td></td></tr>
+	<tr><td>user 7</td><td>D</td><td>E</td><td></td><td>E</td></tr>
+	<tr><td>user 7</td><td>B</td><td>C</td><td>E</td><td></td></tr>
+	</table>
+	</span>
+
+	<span class="col-md-4 col-md-offset-1">
+	<table class="table table-bordered">
+	<tr><th>Product 1</th><th>Product 2</th><th>Products association</th></tr>
+	<tr><td>A</td><td>B</td><td>2</td></tr>
+	<tr><td>A</td><td>C</td><td>3</td></tr>
+	<tr><td>A</td><td>D</td><td>2</td></tr>
+	<tr><td>A</td><td>E</td><td>1</td></tr>
+	<tr><td>B</td><td>C</td><td>3</td></tr>
+	<tr><td>B</td><td>D</td><td>2</td></tr>
+	<tr><td>B</td><td>E</td><td>3</td></tr>
+	<tr><td>C</td><td>D</td><td>3</td></tr>
+	<tr><td>C</td><td>E</td><td>5</td></tr>
+	<tr><td>D</td><td>E</td><td>4</td></tr>
+	</table>
+	</span>
+	</div>
+	Actually at the end you may add extra work to this recommendation. For instance if sofa and pillow are related you may 
+	hope that a user who is buying a sofa will buy a pillow too, but maybe not the other way around. You can do this kind 
+	of filtering by looking at the price. You can also look at the support of the item(s) (the number of times they appear 
+	alone or together) to infer causality. 
+
+	<h2 id="itimodelbased" class="sub-header">Model based</h2>
+	We talk about model based recommendation when we use machine learning algorithm to extract patterns and features from the training data in order to make prediction on new 
+	coming data. Here we can use unsupervised learning techniques (K-means, hierarchical clustering, ...) based on many variables describing the items (for instance category, 
+	color, text, tag, price, ...) in order to cluster them and then select the item from the related cluster. We could also simply perform a K-nearest neighbors 
+	algorithm on those same variables. </br>
+	A more interesting approach is to use matrix factorization techniques on the user x item input matrix. We will see this technique more in details in the model based section 
+	of the user-item recommandation part because it is a particular application of many possibilities of such a factorization. To say a little, the input is a very large matrix, 
+	each row represent a user and each column represent an item. The entries represent the feedback the user gave for the item. It could be the rate the user gave to the movie, 
+	it could binary (1 if the user bought the item 0 if not) or any type of feedback you would like to consider. The goal is to factorize this matrix into two matrices: one 
+	will represent the users in a low dimension space, the other one represent the items in the same space, so it can be seen as a dimensionnality reduction techniques. The 
+	huge advantage of this technique is that is only take into account real behaviour that describe the item and not human bias description like category, color, ... that may 
+	not explain at all how items are related to each other. So, when this factorization is achieve, you can (for instance) use K-nearest neighbors to select the related items 
+	based on the matrix will the item latent factors. 
+
+	<h2 id="itimemorybased" class="sub-header">Memory based</h2>
+	Memory based algorithms consider the same user x item input matrix as before but use it differently. It does not perform any dimensionnality reduction techniques but instead 
+	consider each column as the descriptor of each item. To make more sense, you could construct this matrix with only the most engaged user, because otherwise you will deal 
+	with lines with almost only 0 entries which is not very interesting for the model. Then the methodology is to apply any similarity measure you like on those descriptor like 
+	Pearson correlation (the standard correlation measure). This will give you a huge correlation matrix from which you will be now able to extract your recommendation. The 
+	drawback of such algorithms is that computation may be very very long if not infeasible when dealing with millions of product like Amazon for instance. A solution is to 
+	compute one correlation matrix for each product categories, but it can still remain very long.  
+
+</br></br>
+	<center><h1 id="useritemrecommendation" class="header">User-item recommendation</h1></center>
+	The objective now is to recommend an item to a particular user, that is we want to predict for each user amoung the item she has not seen yet, which one she's going to like. To do so, one 
+	could rely on item description (content based methods) or rely on taste informations for each user (collaborative filtering). The collaborative filtering method is a more 
+	effective one because it rely on actual taste and not on bias human description of product as discuss in the previous part, but sometimes when not enough feedback are 
+	available from each user, content based method are necessary to get good results. 
+
+	<h2 id="contentbased" class="sub-header">Content based</h2>
+	To have a good content based recommender system one needs good features descriptions of both user and item in order to construct a classic machine learning algorithm based on 
+	those features. One can then apply any supervised learning algorithm she like in order to learn the behaviour and predict the taste. 
+	<table class="table table-bordered">
+	<tr><th colspan=5><center>user features</center></th><th colspan=5><center>movie features</center></th><th>rate</th></tr>
+	<tr><th>Gender</th><th>Age</th><th>Occupation</th><th>Town</th><th>...</th><th>Director</th><th>Actor</th><th>Genre</th><th>Release Date</th><th>...</th><th></th></tr>
+	<tr><td>female</td><td>27</td><td>Doctor</td><td>London</td><td>...</td><td>Quentin Tarantino</td><td>Brad Pitt</td><td>Action</td><td>2009</td><td>...</td><td>7/10</td></tr>
+	<tr><td>male</td><td>35</td><td>Teacher</td><td>Paris</td><td>...</td><td>George Lucas</td><td>James Earl Jones</td><td>Science Fiction</td><td>1977</td><td>...</td><td>8/10</td></tr>
+	<tr><td>male</td><td>15</td><td>Student</td><td>New York</td><td>...</td><td>Todd Phillips</td><td>Bradley Cooper</td><td>Comedy</td><td>2009</td><td>...</td><td>4/10</td></tr>
+	</table>
+	With such a table you are now able to construct a model that will link user and item features to the rate in order to later predict the rate for each user on each item. Let's 
+	list advantages and drawbacks of content based methods
+</br></br>
+
+	<table class="table">
+	<tr><th><center>Advantages</center></th><th><center>Drawbacks</center></th></tr>
+	<tr><td><ul>
+				<li><strong>user independence</strong>: the active user profile/features are only based on the active user rates/feedbacks. For instance you can construct a feature 
+					representing the average money spend by the user on the website, and that feature only depend on the user itself and not on neighborhoods. </li>
+				<li><strong>transparency</strong>: explaning the recommendation is a major issue in recommender system. No matter how good the recommendation is, the user will always 
+					want to know why she should like and why she shouldn't look elsewhere to find what she will love. Content-based model can responds easily to this issue thanks to the 
+					item's features</li>
+				<li><strong>cold-start</strong> represent the model when a new user or item is coming. Recommendation can be difficult in those cases because you have no feedback available 
+					for them. Nevertheless, you may have partial descriptions that is partial features which will help to make quite good prediction to begin.</li>
+			</ul>
+		</td>
+		<td><ul>
+				<li><strong>serependity</strong> is the fact to make an unexecpected discovery. Content-based model can't do that, but you wish it could! What people expect from 
+					recommender is to propose them something she would not have think before. But by construction, content based model recommend you action movie because you previously 
+					liked action movies, which is not a major discovery! Content-based model end up by always recommend item from the same "box"</li>
+				<li><strong>domain knowledge</strong> is absolutely necessary to construct effective features and thus effective recommandation. This could ask a lot of effort and 
+					time</li>
+			</ul>
+		</td>
+	</tr>
+	</table>
+
+	<h2 id="collaborativefiltering" class="sub-header">Collaborative Filtering</h2>
+	Collaborative filtering aims at filtering out the item you won't like based on collaborative knowledge: you will like/dislike the item that similar users like/dislike. The input 
+	of such models is a huge user x item matrix filled with user feedback on previously seen item, the goal being to fill out the blank.
+	<center><img src="/images/recoMatrix.png" width="250px"/></center>
+
+	<h3 id="CFmemorybased">Memory based</h3>
+	Those methods are exactly the reverse of item to item memory based ones. So here, the ratings are used to computed similarity between users. For instance the similarity between 
+	two users can be computed with the Pearson correlation between their rate vector, i.e the row corresponding to each user in the input matrix. 
+	$$simil(u,u') = \frac{\sum_i (r_{u,i} - \bar{r_u})(r_{u',i} - \bar{r_u'})}{\sqrt{\sum_i (r_{u,i} - \bar{r_u})^2 \sum_i (r_{u',i} - \bar{r_u'})^2}}$$
+	Then, the rate of a user on an unseen item is computed either by averaging the rate of the K most similar user who have seen this item or by computing a weighted rate average of 
+	the people (or K most similar ones) who have seen this item, the weight being the similarity measure.
+	$$r_{u,i} = \frac{\sum_{u' \in \text{\{K most similar to u \}}} simil(u,u') r_{u',i}}{\sum_{u' \in \text{\{K most similar to u\}}} simil(u,u')}$$
+
+	<h3 id="CFmodelbased">Model based</h3>
+	As said previously, model based methods involves machine learning techniques. A very popular model based method is the Alternating Least Square With lambda regularization, aka 
+	ALS-WR. This technique being my favorites technique for recommender system, this section will be the longest !
+	</br>
+	In order to understand the model, imagine the problem as a huge sudoku problem. The less input you have in your table, the harder the problem is. It is the same for recommender 
+	system, if you have very few feedback the predictions won't be good enough because it will be impossible to infer tastes. Moreover, something very important in mathematics is 
+	the <em>uniqueness of the solution</em> telling that the answer is the unique possible answer to the problem. 
+	Imagine the complete matrix information exists somewhere, but you only have access to a part of 
+	it, which is our case here. If everybody would have seen everything, we would have the complete matrix, but in reality we only have a partial information. If we have too little 
+	information there may be no strategy able to find the true full matrix. In other words, there could be two valid strategies that have exactly the true values where the 
+	information is known, and differ elsewhere, so there will be two different solutions to the problem and it would be impossible to know the right one. It is the same for sudoku, 
+	it there is only one number given in the table, there are multiple different answer to the game that will be valid. It does not mean that we won't make any recommendation, it 
+	only mean that we can not guarantee the exactness of the solution. </br>
+	</br>
+	So, we have been talking about solution but we did not yet defined the problem and the rules of the "game". If the problem is only to recover the missing entries without any 
+	rules, nothing can be done. Like for sudoku, if no one tells you that you must put only numbers between 1 and 9 and every row must contains every number, and the same for 
+	each column and each square, you could just put anything in the table and that will do it ! In mathematics we don't speak about rules but about constraints. For the ALS-WR 
+	we suppose as a constraint that the rank of the input matrix is lower than a certain number $K$. It means that their is a correlation between the rows (= the items) with 
+	$K$ degrees of freedom and the same for the columns (= the users). This hypothesis make sens because it seems logical that there are a few number of determinant factors 
+	in the users behaviour as well as in the items descriptions. Those factors are called the latent (or hidden) factors because their are not known in advance, we only assume 
+	they exists and that there are $K$ of them. Some factors can be found at posteriori: if we have acces to descriptions of user and item. For instance for movie recommendation, 
+	we can look at all the movie who have the highest first factor value and look for what they have in common: is it the genre, the length of the movie, the actors, ... ? 
+	</br>
+	The latent factor are computed in a collaborative way: if different items are clicked by a large common group of people, this items will have similar factors. Likewise, if 
+	different users clicked on the same group of items, the users will have similar factors. That's how latent features are compute, so not explicit features given by a human,	come up: 
+	for instance in movie, if many people love action movies, they will give a high rate to several actions movies thus those movies will have similar latent factors (that could 
+	be identify later as the action genre) and the users will have similar factor (action genre lovers) and their scalar product will be high indicating a high affinity between 
+	those users and items. That is the power of collaborative filtering: without any human determine features, any sufficiently observed behaviour is automatically measured. 
+	</br>
+	In matrix factorization techniques like ALS-WR, the estimated rate of user $u$ for item $i$ ($\hat{R}_{ui}$) is computed as follow : $R_{ui} = U_u \cdot V_i$, 
+	where $U_u$ and $V_i$ are the latent vector 
+	features of size $K$ (the rank) respectively of the user and the item and $\cdot$ is the scalar product. So the input matrix decomposes in $R = UV^T$. Each line of $U$ 
+	correspond to a user latent vector computed from the item she has seen, and each line of $V$ correspond to an item laten vector from the user who has seen it. Thus if every 
+	user has seen at least one item every line of U can be estimated (maybe not very precisely if exactly one feedback is available ...), 
+	and respectively if each item has been seen a least once every line of V can be estimated. 
+	</br></br>
+	The mathematical problem is :
+	$$ \underset{U,V}{\min} \sum_{u,i \ observed} (R_{ui}-U_u \cdot V_i)^2 + \lambda \left( ||U_u||^2 + ||V_i||^2 \right)$$
+	It means that we want the scalar product to be as close as possible to the true value for the observed ones, and we hope that it will give a good approximation of the tastes 
+	to gives us the unseen affinity values.
+	</br>
+	The algorithm works as follow: 
+	<ol>
+		<li>First, we initialize $U$ and $V$ with random values.</li>
+		<li>Then we observed that if we fix $V$ for instance, the minimization problem is exactly multiple 
+	<a target=_blank href="http://rwarloplabs.com/machinelearning/posts/datascientist.php#lossfunction">Ridge Regression</a> (one for each user)
+	where we know the solution. So we fix $V$ and compute the best $U$ that minimize the problem (see the ridge regression solution). </li>
+		<li>We fix $U$ and compute the best $V$ given ridge regression. That is why it is called the alternating least square !</li>
+		<li>We iterate those two previous step until the $U$ and $V$ stop changing a lot between two rounds.</li>
+	</ol>
+
+	<table class="table">
+	<tr><th><center>Advantages</center></th><th><center>Drawbacks</center></th></tr>
+	<tr><td><ul>
+				<li><strong>serependity</strong>: if a user has been observed as similar to an other one, collaborative filtering can recommend her new item from a different 
+					area based on the other user tastes. This bring some serependity to the recommendation</li>
+				<li><strong>domain knowledge</strong> is not necessary to construct effective features and thus effective recommandation.</li>
+			</ul>
+		</td>
+		<td><ul>
+				<li><strong>user independence</strong>: the active user profile/features are based on the neighborhoods, so we need to find and defined this neighborhoods</li>
+				<li><strong>cold-start</strong> is an important problem in collaborative filtering, but we will see later how to deal with it.</li>
+				<li><strong>transparency</strong>: at first collaborative filtering is not transparent at all since it does not require domain knowledge which can be 
+					a drawback to explain the user why she got those recommendation. But if domain knowledge is available one could work on posterior latent factor 
+					labelling to make the recommendation more transparent.</li>
+			</ul>
+		</td>
+	</tr>
+	</table>
+
+	<h2 id="hybridRS" class="sub-header">Hybrid methods</h2>
+	Hybrid methods are mix of collaborative filtering and content based methods trying to get the best of each one. If a user is new so with no feedback, collaborative 
+	filtering techniques won't be able to make proper recommendation for her, so a content based methods would be prefer. Likewise for new item. An hybrid method could 
+	be to use a content based methods is the user have seen less than a given number of item and a collaborative filtering methods otherwise. 
+	</br>
+	With ALS-WR, one could take into account contextual variable (which is not useful is sufficient feedback is available !). Usually each row represent a user with non 
+	zero entries where the user-item affinity is known. One could just simply add columns (for instance at the beggining of the matrix) corresponding to additional 
+	users informations like two columns to indicate the gender (a 1 for the corresponding gender and a 0 otherwise). The same can be done for item adding rows to the 
+	matrix. This gives an hybrid recommender system that can be solve exactly like before. 
+
+	<center><img src="/images/HybridReco.png" width="500px"/></center>
+
+</br></br>
+	<center><h1 id="goingfurther" class="header">Going further</h1></center>
+	This section will deal with advance technique to build more effective recommender system. I won't give too much details, the aim being to know what directions can be dig.
+
+	<h2 id="explorexploit" class="sub-header">Exploration/Exploitation</h2>
+	A major issue in machine learning is that model are construct based on historical data and machine learning can not learn from what it has not seen. If a model has only 
+	seen white cars, it will never predict a car to be green ! This bring some huge limits to recommender system that can not really discover affinity out of the blue. To do 
+	better, one must use <a href="http://rwarloplabs.com/machinelearning/posts/machinelearningfordummies.php#reinforcementlearning" target=_blank>reinforcement 
+	learning</a> techniques where one choose an action given a context, observe what happens in order to update her knowledge and then choose the next action given the new context. 
+	Besides, such techniques are build in order to keep exploring efficiently the new possibilities. This bring the exploration/exploitation dilemma:
+	<ul>
+		<li>one want to choose the best action at each time step so to exploit what she has learn before</li>
+		<li>to learn, one have to explore differents possibilities</li>
+	</ul>
+	Such problems are usually solve with bandits learning and algorithms like:
+	<ul>
+		<li>$\varepsilon$-greedy : $\varepsilon$ % of the time one test an action at random, and the remaining of the time choose the best action given her knowledge</li>
+		<li>UCB1 : compute a confidence interval around the prediction and choose the one with upper confidence bound (UCB = Upper Confidence Bound). The idea is 
+			to choose an action if the success probability is high or the uncertainty is high (meaning that there is a lot to learn here) and with a weight 
+			between the success probability (= exploitation) and uncertainty (= exploration).<li>
+		<li>Thompson Sampling is a bayesian approach where the parameter are drawn from a probability distribution</li>
+		<li>Exp3 : a probability distribution is computed for the actions, and the weight are compute given exponential formula</li>
+		<li>...</li>
+	</ul>
+	Current research is working on bringing those algorithms into recommender systems.
+
+	<h2 id="MTL" class="sub-header">Multi-Task Learning</h2>
+	Sometimes a user can perform several action or task. For instance for restaurant recommendation the user can rate not only the food but also the service and the decor, 
+	which give us three rate for each user/restaurant pair. One could make three independant recommender system to predict each rate independently, but maybe learning those 
+	three tasks at the same time and using their correlation (maybe if you liked the food you will be nicer with the waiter, or on the contrary is the service was bad you 
+	may have enjoy less the food) will give better results. That is what multi-task learning does. 
+
+	<h2 id="transferlearning" class="sub-header">Transfer Learning</h2>
+ 	Say you have build a recommendation system for movies and it works well and now you are willing to sell books. You should start from scratch to build a new recommender 
+ 	system for your books, but few people have come to this section so far, thus you would like to use your previous knowledge from the movie part to help your new 
+ 	recommender system to make recommendation. This idea is not completly crazy when one want to transfer from movies to books because they are many similarity/behaviour 
+ 	we can think about: people who love given genre, recent movies/books, classic ones, ... and thus transfer can bring better results. But transfer learning must be 
+ 	used carrefuly. For instance transfering knowledge for the movie area to the electronic area could bring to much bias and lead to what is called negative transfer: 
+ 	you would have performed better prediction without transfering knowledge. 
+
+
+	</div>
+	
+	</div>
+	
+          
+	</div>
+</div>
+</body>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script src="/js/function.js"></script>
+	<script src="/library/kinetic.js"></script>
+	<script src="/js/datascientist.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/js/docs.min.js"></script></body>
+</html>
