@@ -1,1 +1,235 @@
-<h1>Hello</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title>Romain WARLOP</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom styles for this template -->
+    <link href="/css/carousel.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+  </head>
+<!-- NAVBAR
+================================================== -->
+  <body>
+
+<div class="navbar-wrapper">
+  <div class="container">
+
+  <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+    <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/index.php">Romain WARLOP</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+      <li><a href="/about.php">About</a></li>
+      <li><a href="/publication.php">Publication</a></li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Machine Learning stuff<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+        <li class="dropdown-header">Vulgarisation posts</li>
+          <li><a href="/machinelearning/posts/recommendersystem.php">What are recommender system ?</a></li>
+          <li><a href="/machinelearning/posts/machinelearningfordummies.php">Machine Learning for dummies</a></li>
+          <li><a href="/machinelearning/posts/precision-recall.php">How to explain precision and recall to a non data scientist ?</a></li>
+          <li><a href="/machinelearning/posts/datascientist.php">Data scientist for motivated dummies</a></li>
+        <li class="divider"></li>
+        <li class="dropdown-header">Theoretical posts</li>
+          <li><a href="/machinelearning/posts/recommendersystemssurvey.php">Recommender Systems Survey</a></li>
+          <li><a href="/machinelearning/posts/svm.php">Support Vector Machine</a></li>
+          <li><a href="/machinelearning/posts/penalizedRegression.php">Geometric interpretation of Ridge and LASSO regressions</a></li>
+        <li class="divider"></li>
+        <li class="dropdown-header">Entertainement & Application</li>
+          <li><a href="/machinelearning/entertainment/loto.php">Is lottery random?</a></li>
+          <li><a href="/machinelearning/entertainment/tennis.php">Can tennis make me rich?</a></li>
+          <li><a href="/machinelearning/entertainment/movieboxoffice.php">Movie box-office prediction</a></li>
+        </ul>
+      </li>
+      </ul>
+    </div>
+    </div>
+  </div>
+
+  </div>
+</div>
+
+
+    <!-- Carousel
+    ================================================== -->
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner">
+		<div class="item active">
+			<img data-src="holder.js/" alt="">
+			<div class="container">
+			<div class="carousel-caption">
+			<img src="/images/moviewall.png">
+			<h1>Recommender Systems</h1>
+			<p>How do they works ?</p>
+			<p><a class="btn btn-lg btn-primary" href="/machinelearning/posts/recomendersystem.php" role="button">See more</a></p>
+			</div>
+			</div>
+		</div>
+    <div class="item">
+      <img data-src="holder.js/" alt="">
+      <div class="container">
+      <div class="carousel-caption">
+      <img src="/images/computerscience.png">
+      <h1>Data Science</h1>
+      <p>For motivated dummies</p>
+      <p><a class="btn btn-lg btn-primary" href="/machinelearning/posts/datascientist.php" role="button">See more</a></p>
+      </div>
+      </div>
+    </div>
+    <div class="item">
+      <img data-src="holder.js/" alt="">
+      <div class="container">
+      <div class="carousel-caption">
+      <img src="/images/tennis.png">
+      <h1>Sport</h1>
+      <p>Can tennis make me rich ?</p>
+      <p><a class="btn btn-lg btn-primary" href="/machinelearning/entertainment/tennis.php" role="button">See more</a></p>
+      </div>
+      </div>
+    </div>
+
+      </div>
+      <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+      <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    </div><!-- /.carousel -->
+
+
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+    <div class="container marketing">
+
+	<div class="row"> 
+	<div class="jumbotron justified-text">
+  <div class="row featurette">
+    <div class="col-md-3">
+          <img class="featurette-image img-responsive" src="/images/RW21.jpg" alt="Romain WARLOP">
+    </div>
+	<h3>Hi, I'm Romain. </h3>
+    <div class="col-md-7">
+  	I am at data scientist in the french company fifty-five and also a PhD Student in the recommender system field in machine learning with team Sequel 
+    at Inria Lille. I also co-manage the association Data for Good which brings together data scientists and non profit organisation to solve their problems through data. 
+  </br>
+  <a href="/about.php">Learn more about me</a>
+    </div>
+  </div>
+	</div>
+	</div>
+
+      <!-- START THE FEATURETTES -->
+<!-- ==================================================================================================================== -->
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-4 col-md-offset-1">
+          <img class="featurette-image img-responsive" src="/images/feedforwardnet.png" alt="Quit smoking">
+        </div>
+        <div class="col-md-6">
+          <h2 class="featurette-heading">A Deep Learning Tutorial <span class="text-muted">From Perceptrons to Deep Networks</span></h2>
+          <p class="lead justified-text">In recent years, there’s been a resurgence in the field of Artificial Intelligence. 
+            It’s spread beyond the academic world with major players like Google, Microsoft, and Facebook creating 
+            their own research teams and making some impressive acquisitions. 
+            [By <a href="https://www.toptal.com/resume/ivan-vasilev" target=_blank> IVAN VASILEV</a> on 
+            <a href="https://www.toptal.com/" target=_blank>Toptal</a>] </br>
+      <a href="https://www.toptal.com/machine-learning/an-introduction-to-deep-learning-from-perceptrons-to-deep-networks">See more ...</a></p></p>
+        </div>
+      </div>
+
+<!-- ==================================================================================================================== -->
+      <hr class="featurette-divider">
+      
+  <div class="row featurette">
+  <div class="col-md-6 col-md-offset-1">
+  <h2 class="featurette-heading">Data Scientists <span class="text-muted">For motivated dummies</span></h2>
+  <p class="lead justified-text">Discover machine learning techniques applied by data scientist in their 
+  everyday life. This article is a little technical.</br>
+  <a href="/machinelearning/posts/datascientist.php">See more ...</a></p>
+  </div>
+  <div class="col-md-4">
+    <img class="featurette-image img-responsive" src="/images/computerscience_featurette.png" alt="Tennis">
+  </div>
+  </div>
+<!-- ==================================================================================================================== -->
+
+      <hr class="featurette-divider">
+
+      <div class="row featurette">
+        <div class="col-md-4 col-md-offset-1">
+          <img class="featurette-image img-responsive" src="/images/moviewall_featurette.png" alt="Quit smoking">
+        </div>
+        <div class="col-md-6">
+          <h2 class="featurette-heading">Recommender System <span class="text-muted">How they do it ?</span></h2>
+          <p class="lead justified-text">Recommender System is a very active field of machine learning and is applied 
+          everywhere : Amazon, Netflix, E-commerce, ... There is many ways to build a recommender system. Discover here 
+          a review of the different techniques.</br>
+      <a href="/machinelearning/posts/recommendersystems.php">See more ...</a></p></p>
+        </div>
+      </div>
+      
+<!-- ==================================================================================================================== -->
+      <hr class="featurette-divider">
+
+	<div class="row featurette">
+	<div class="col-md-6 col-md-offset-1">
+	<h2 class="featurette-heading">Tennis <span class="text-muted">Who will win the match?</span></h2>
+	<p class="lead justified-text">Here is a machine learning algorithm design to predict the output of a tennis match. You'll find 
+	here all the details of the implementation and visualization of the data and of the output. Maybe a winning bet strategy can be inferred 
+	from that ...
+	</br>Keywords: Features construction - EM algorithm - (Non Linear) Dimensionality reduction</br>
+	<a href="/machinelearning/entertainment/tennis.php">See more ...</a></p>
+	</div>
+	<div class="col-md-4">
+	  <img class="featurette-image img-responsive" src="/images/tennis_featurette.png" alt="Tennis">
+	</div>
+	</div>
+
+<!-- ==================================================================================================================== -->
+      <hr class="featurette-divider">
+
+      <!-- /END THE FEATURETTES -->
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>
