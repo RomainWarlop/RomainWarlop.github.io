@@ -17,9 +17,7 @@
 	  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
 	});
 	</script>
-	<script src="/MathJax-master/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-	<link rel="stylesheet" type="text/css" href="/css/d3.parcoords.css">
-	<link rel="stylesheet" type="text/css" href="/css/bubbleChart.css">
+	<script src="/MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <title>Romain WARLOP</title>
 
     <!-- Bootstrap core CSS -->
@@ -34,10 +32,6 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 	
-	<!-- Custom styles for this template -->
-    <link href="/css/dashboard.css" rel="stylesheet">
-	<link href="/css/crossfilter.css" rel="stylesheet">
-	<link href="/dc.js-1.7.0/dc.css" rel="stylesheet">
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
@@ -50,7 +44,50 @@
 
 <body>
 
-<?php include($_SERVER['DOCUMENT_ROOT'].'/navbar.php'); ?>
+<div class="navbar-wrapper">
+  <div class="container">
+
+  <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+    <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/index.html">Romain WARLOP</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+      <li class='active'><a href="/about.html">About</a></li>
+      <li><a href="/publication.html">Publication</a></li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Machine Learning stuff<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+        <li class="dropdown-header">Vulgarisation posts</li>
+          <li><a href="/machinelearning/posts/recommendersystem.html">What are recommender system ?</a></li>
+          <li><a href="/machinelearning/posts/machinelearningfordummies.html">Machine Learning for dummies</a></li>
+          <li><a href="/machinelearning/posts/precision-recall.html">How to explain precision and recall to a non data scientist ?</a></li>
+          <li><a href="/machinelearning/posts/datascientist.html">Data scientist for motivated dummies</a></li>
+        <li class="divider"></li>
+        <li class="dropdown-header">Theoretical posts</li>
+          <li class="active"><a href="/machinelearning/posts/recommendersystemssurvey.html">Recommender Systems Survey</a></li>
+          <li><a href="/machinelearning/posts/svm.html">Support Vector Machine</a></li>
+          <li><a href="/machinelearning/posts/penalizedRegression.html">Geometric interpretation of Ridge and LASSO regressions</a></li>
+        <li class="divider"></li>
+        <li class="dropdown-header">Entertainement & Application</li>
+          <li><a href="/machinelearning/entertainment/loto.html">Is lottery random?</a></li>
+          <li><a href="/machinelearning/entertainment/tennis.html">Can tennis make me rich?</a></li>
+        </ul>
+      </li>
+      </ul>
+    </div>
+    </div>
+  </div>
+
+  </div>
+</div>
 
 <div class="container-fluid">
   <div class="row">
@@ -390,11 +427,8 @@
 
     }
     </script>
-	<script src="/js/crossfilter.v1.min.js"></script>
-	<script src="/dc.js-1.7.0/dc.js"></script>
 	<script src="/js/function.js"></script>
-	<script src="/library/kinetic.js"></script>
+	<script src="/kinetic/kinetic.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/assets/js/docs.min.js"></script></body>
 </html>
